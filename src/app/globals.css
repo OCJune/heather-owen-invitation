@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @import "../styles/color.css";
+@import "../styles/typography.css";
 
 @layer base {
   body {
-    @apply bg-page text-primary antialiased;
+    @apply bg-page font-sans text-primary antialiased;
   }
 }
