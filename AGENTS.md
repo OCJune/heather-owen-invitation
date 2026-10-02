@@ -7,3 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Project conventions
+
+Follow [README.md](README.md): lightweight FSD under `src/` (`app` → `features` → `shared`, no cross-feature imports), `태그: 설명` commit messages in Korean, `타입/#이슈번호-작업내용` branches, and the code conventions in section 3.
