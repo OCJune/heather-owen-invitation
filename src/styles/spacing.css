@@ -1,0 +1,18 @@
+/*
+ * 간격 · 레이아웃 토큰 — Figma 변수(Spacing 컬렉션)와 맞춘다.
+ *
+ * Figma의 spacing/2 ~ spacing/80 (px)은 Tailwind 기본 간격(1 = 4px)으로 표현한다.
+ *   spacing/6 → 1.5   spacing/8 → 2    spacing/10 → 2.5   spacing/12 → 3
+ *   spacing/16 → 4    spacing/24 → 6   spacing/28 → 7     spacing/80 → 20
+ * 예) spacing/16 안쪽 여백 → p-4, spacing/8 간격 → gap-2
+ *
+ * 모서리는 둥글리지 않는다(radius/none). 아치형 사진 자리만 예외다.
+ */
+@theme {
+  /* layout/gutter — 좌우 여백 28px → px-gutter */
+  --spacing-gutter: 1.75rem;
+  /* layout/section-y — 섹션 위아래 여백 80px → py-section-y */
+  --spacing-section-y: 5rem;
+  /* layout/width — 청첩장 본문 폭 390px → max-w-invitation */
+  --container-invitation: 24.375rem;
+}
