@@ -7,7 +7,6 @@ import { Checkbox } from "@/shared/ui/Checkbox/Checkbox";
 import { Chip } from "@/shared/ui/Chip/Chip";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Input } from "@/shared/ui/Input/Input";
-import { Select } from "@/shared/ui/Input/Select";
 import { Textarea } from "@/shared/ui/Input/Textarea";
 import { LanguageToggle } from "@/shared/ui/LanguageToggle/LanguageToggle";
 import { PhotoSlot } from "@/shared/ui/PhotoSlot/PhotoSlot";
@@ -77,13 +76,8 @@ export default function TestPage() {
 
       <Block title="Input">
         <Input index="01" label="성함" placeholder="성함을 입력해 주세요" />
-        <Select index="02" label="동행 인원" defaultValue="0">
-          <option value="0">없음</option>
-          <option value="1">1명</option>
-          <option value="2">2명</option>
-        </Select>
         <Textarea
-          index="03"
+          index="02"
           label="메시지"
           placeholder="두 사람에게 전할 축하의 말을 적어주세요."
           maxLength={200}
