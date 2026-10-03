@@ -6,6 +6,7 @@ import { Badge } from "@/shared/ui/Badge/Badge";
 import { Button } from "@/shared/ui/Button/Button";
 import { Checkbox } from "@/shared/ui/Checkbox/Checkbox";
 import { Chip } from "@/shared/ui/Chip/Chip";
+import { ChipGroup } from "@/shared/ui/Chip/ChipGroup";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Input } from "@/shared/ui/Input/Input";
 import { Textarea } from "@/shared/ui/Input/Textarea";
@@ -60,13 +61,23 @@ export default function TestPage() {
         </div>
       </Block>
 
-      <Block title="Chip">
-        <div className="flex gap-1.5">
-          <Chip selected className="flex-1">
+      <Block title="Chip (하나만 선택)">
+        <ChipGroup index="01" label="어느 쪽 하객이신가요?">
+          <Chip name="side" value="groom" defaultChecked>
+            신랑측
+          </Chip>
+          <Chip name="side" value="bride">
+            신부측
+          </Chip>
+        </ChipGroup>
+        <ChipGroup index="02" label="참석 여부">
+          <Chip name="attendance" value="yes" defaultChecked>
             참석할게요
           </Chip>
-          <Chip className="flex-1">어려워요</Chip>
-        </div>
+          <Chip name="attendance" value="no">
+            어려워요
+          </Chip>
+        </ChipGroup>
       </Block>
 
       <Block title="Checkbox">
