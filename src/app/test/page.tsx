@@ -37,7 +37,6 @@ export default function TestPage() {
       <Block title="Icon">
         <div className="flex items-center gap-4 text-icon-primary">
           <Icon name="close" />
-          <Icon name="chevron-down" />
           <Icon name="arrow-right" />
           <span className="flex bg-inverse text-on-inverse">
             <Icon name="check" size={18} />

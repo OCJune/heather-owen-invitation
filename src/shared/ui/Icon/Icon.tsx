@@ -1,13 +1,11 @@
 import arrowRight from "@/shared/assets/icons/arrow-right.svg";
 import check from "@/shared/assets/icons/check.svg";
-import chevronDown from "@/shared/assets/icons/chevron-down.svg";
 import close from "@/shared/assets/icons/close.svg";
 import { cn } from "@/shared/lib/utils";
 
 const ICONS = {
   "arrow-right": arrowRight,
   check,
-  "chevron-down": chevronDown,
   close,
 } as const;
 
