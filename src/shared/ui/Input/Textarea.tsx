@@ -40,7 +40,7 @@ export function Textarea({
       {label && <FieldLabel index={index}>{label}</FieldLabel>}
       <span className="flex h-30 flex-col justify-between border-b border-strong py-2.5">
         <textarea
-          className="w-full flex-1 resize-none bg-transparent typo-body-sans text-[0.875rem] text-primary outline-none placeholder:text-muted"
+          className="w-full flex-1 resize-none [scrollbar-width:none] bg-transparent typo-body-sans text-[0.875rem] text-primary outline-none placeholder:text-muted [&::-webkit-scrollbar]:hidden"
           maxLength={maxLength}
           value={value}
           defaultValue={defaultValue}
