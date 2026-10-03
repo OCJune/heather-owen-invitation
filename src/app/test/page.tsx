@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { AccountGroup } from "@/features/gift/ui/AccountGroup";
 import { AccountRow } from "@/features/gift/ui/AccountRow";
 import { GuestbookMessage } from "@/features/guestbook/ui/GuestbookMessage";
 import { Badge } from "@/shared/ui/Badge/Badge";
@@ -142,8 +143,17 @@ export default function TestPage() {
         </div>
       </Block>
 
-      <Block title="Account Row (features/gift)">
-        <AccountRow holder="신랑 이종찬" account="국민 000000-00-000000" />
+      <Block title="Account Group · Account Row (features/gift)">
+        <div className="border-t border-strong">
+          <AccountGroup title="신랑측 계좌" defaultOpen>
+            <AccountRow holder="신랑 이종찬" account="국민 000000-00-000000" />
+            <AccountRow holder="부 이규장" account="신한 000-000-000000" />
+            <AccountRow holder="모 전경자" account="농협 000-0000-0000-00" />
+          </AccountGroup>
+          <AccountGroup title="신부측 계좌">
+            <AccountRow holder="신부 임현지" account="우리 0000-000-000000" />
+          </AccountGroup>
+        </div>
       </Block>
     </main>
   );

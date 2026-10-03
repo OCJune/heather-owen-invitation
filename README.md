@@ -117,20 +117,21 @@ public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 �
 
 Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm dev` 실행 후 [`/test`](http://localhost:3000/test)에서 한눈에 확인할 수 있습니다. (프로덕션 빌드에서는 404)
 
-| Figma 컴포넌트    | 코드                                          | 비고                                        |
-| ----------------- | --------------------------------------------- | ------------------------------------------- |
-| Icon/\*           | `shared/ui/Icon/Icon.tsx`                     | `name`으로 선택, 글자색(`text-*`)을 따름    |
-| Button            | `shared/ui/Button/Button.tsx`                 | `variant`: primary / secondary, `showIcon`  |
-| Chip              | `shared/ui/Chip/Chip.tsx`                     | `selected`                                  |
-| Checkbox          | `shared/ui/Checkbox/Checkbox.tsx`             | 실제 `<input type="checkbox">`를 감쌈       |
-| Input             | `shared/ui/Input/Input.tsx`, `Textarea.tsx`   | `index`, `label`, 글자 수 표시(`maxLength`) |
-| Language Toggle   | `shared/ui/LanguageToggle/LanguageToggle.tsx` | `active`, `hrefs`                           |
-| Badge             | `shared/ui/Badge/Badge.tsx`                   |                                             |
-| Photo Slot        | `shared/ui/PhotoSlot/PhotoSlot.tsx`           | `shape`: rect / arch, 사진은 children으로   |
-| Section Header    | `shared/ui/SectionHeader/SectionHeader.tsx`   | `theme`: light / dark                       |
-| Summary Row       | `shared/ui/SummaryRow/SummaryRow.tsx`         |                                             |
-| Guestbook Message | `features/guestbook/ui/GuestbookMessage.tsx`  | 방명록에서만 쓰므로 feature에 둠            |
-| Account Row       | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠         |
+| Figma 컴포넌트             | 코드                                          | 비고                                        |
+| -------------------------- | --------------------------------------------- | ------------------------------------------- |
+| Icon/\*                    | `shared/ui/Icon/Icon.tsx`                     | `name`으로 선택, 글자색(`text-*`)을 따름    |
+| Button                     | `shared/ui/Button/Button.tsx`                 | `variant`: primary / secondary, `showIcon`  |
+| Chip                       | `shared/ui/Chip/Chip.tsx`                     | `selected`                                  |
+| Checkbox                   | `shared/ui/Checkbox/Checkbox.tsx`             | 실제 `<input type="checkbox">`를 감쌈       |
+| Input                      | `shared/ui/Input/Input.tsx`, `Textarea.tsx`   | `index`, `label`, 글자 수 표시(`maxLength`) |
+| Language Toggle            | `shared/ui/LanguageToggle/LanguageToggle.tsx` | `active`, `hrefs`                           |
+| Badge                      | `shared/ui/Badge/Badge.tsx`                   |                                             |
+| Photo Slot                 | `shared/ui/PhotoSlot/PhotoSlot.tsx`           | `shape`: rect / arch, 사진은 children으로   |
+| Section Header             | `shared/ui/SectionHeader/SectionHeader.tsx`   | `theme`: light / dark                       |
+| Summary Row                | `shared/ui/SummaryRow/SummaryRow.tsx`         |                                             |
+| Guestbook Message          | `features/guestbook/ui/GuestbookMessage.tsx`  | 방명록에서만 쓰므로 feature에 둠            |
+| Account Row                | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠         |
+| Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 제목 줄을 눌러 여닫음 (+ / −)               |
 
 - 아이콘을 추가할 때는 Figma에서 내보낸 SVG를 `shared/assets/icons/`에 넣고 `Icon.tsx`의 `ICONS`에 등록합니다.
 
