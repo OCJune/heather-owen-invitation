@@ -68,6 +68,7 @@ src/
 │   ├── layout.tsx        # 루트 레이아웃 (폰트, 메타데이터, 전역 Provider)
 │   ├── fonts.ts          # 글꼴 불러오기 (Cormorant Garamond, Noto Serif KR, Noto Sans KR)
 │   ├── page.tsx          # 청첩장 본문: features의 섹션을 순서대로 조립
+│   ├── test/page.tsx     # 공용 UI 테스트 페이지 (개발 환경 전용)
 │   └── globals.css       # Tailwind 진입점 + styles/ 토큰 import
 ├── features/             # 청첩장 섹션 · 기능 단위 (ui / api / lib / model)
 │   ├── cover/            # 커버 (이름, 메인 사진, 일시 · 장소, 언어 전환)
@@ -80,7 +81,7 @@ src/
 │   ├── guestbook/        # 방명록 (목록, 작성, 삭제)
 │   └── closing/          # 마무리 인사, 공유
 ├── shared/               # 공용 모듈 (도메인 비의존)
-│   ├── ui/               # 공용 UI 컴포넌트 (Button, Chip, Checkbox, Input, SectionHeader 등)
+│   ├── ui/               # 공용 UI 컴포넌트 (아래 표 참고)
 │   ├── hooks/            # 공용 훅
 │   ├── lib/              # 공통 유틸리티 (cn, date 등)
 │   ├── assets/           # 공용 에셋 (icons, images)
@@ -111,6 +112,28 @@ public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 �
 | `model/` | 상태, 타입, 훅 (복잡해질 때만)           |
 
 > 경량화를 위해 `widgets` · `entities` 레이어와 slice별 `index.ts`(Public API)는 두지 않습니다. 프로젝트가 커져 필요해지면 그때 추가합니다.
+
+### 공용 UI 컴포넌트
+
+Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm dev` 실행 후 [`/test`](http://localhost:3000/test)에서 한눈에 확인할 수 있습니다. (프로덕션 빌드에서는 404)
+
+| Figma 컴포넌트             | 코드                                          | 비고                                                 |
+| -------------------------- | --------------------------------------------- | ---------------------------------------------------- |
+| Icon/\*                    | `shared/ui/Icon/Icon.tsx`                     | `name`으로 선택, 글자색(`text-*`)을 따름             |
+| Button                     | `shared/ui/Button/Button.tsx`                 | `variant`: primary / secondary, `showIcon`           |
+| Chip                       | `shared/ui/Chip/Chip.tsx`, `ChipGroup.tsx`    | 하나만 고르는 라디오 버튼. 같은 묶음은 `name`을 같게 |
+| Checkbox                   | `shared/ui/Checkbox/Checkbox.tsx`             | 실제 `<input type="checkbox">`를 감쌈                |
+| Input                      | `shared/ui/Input/Input.tsx`, `Textarea.tsx`   | `index`, `label`, 글자 수 표시(`maxLength`)          |
+| Language Toggle            | `shared/ui/LanguageToggle/LanguageToggle.tsx` | `active`, `hrefs`                                    |
+| Badge                      | `shared/ui/Badge/Badge.tsx`                   |                                                      |
+| Photo Slot                 | `shared/ui/PhotoSlot/PhotoSlot.tsx`           | `shape`: rect / arch, 사진은 children으로            |
+| Section Header             | `shared/ui/SectionHeader/SectionHeader.tsx`   | `theme`: light / dark                                |
+| Summary Row                | `shared/ui/SummaryRow/SummaryRow.tsx`         |                                                      |
+| Guestbook Message          | `features/guestbook/ui/GuestbookMessage.tsx`  | 방명록에서만 쓰므로 feature에 둠                     |
+| Account Row                | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠                  |
+| Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 제목 줄을 눌러 여닫음 (+ / −)                        |
+
+- 아이콘을 추가할 때는 Figma에서 내보낸 SVG를 `shared/assets/icons/`에 넣고 `Icon.tsx`의 `ICONS`에 등록합니다.
 
 ---
 
