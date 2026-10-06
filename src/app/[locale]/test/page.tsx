@@ -154,7 +154,7 @@ export default function TestPage() {
 
       <Block title="Guestbook Message (features/guestbook)">
         <div className="border-t border-strong">
-          <GuestbookMessage name="김하늘" date="02.10">
+          <GuestbookMessage name="홍길동" date="02.10">
             결혼 진심으로 축하해! 지금처럼 서로에게 가장 든든한 편이 되어주길.
           </GuestbookMessage>
         </div>

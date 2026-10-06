@@ -110,13 +110,15 @@ export function GuestbookBoard({
       )}
 
       <div className="mt-7 flex gap-2">
-        <Button
-          variant="secondary"
-          onClick={() => setIsExpanded((prev) => !prev)}
-          className="flex-1"
-        >
-          {isExpanded ? dict.collapse : dict.viewAll}
-        </Button>
+        {entries.length > PAGE_SIZE && (
+          <Button
+            variant="secondary"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="flex-1"
+          >
+            {isExpanded ? dict.collapse : dict.viewAll}
+          </Button>
+        )}
         <Button onClick={() => setIsWriting(true)} className="flex-1">
           {dict.write}
         </Button>

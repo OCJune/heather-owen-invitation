@@ -30,11 +30,7 @@ export default async function InvitationPage({
       <LocationSection dict={dict.location} common={dict.common} />
       <RsvpSection dict={dict.rsvp} closeLabel={closeLabel} />
       <GiftSection dict={dict.gift} common={dict.common} />
-      <GuestbookSection
-        locale={locale}
-        dict={dict.guestbook}
-        closeLabel={closeLabel}
-      />
+      <GuestbookSection dict={dict.guestbook} closeLabel={closeLabel} />
       <ClosingSection
         dict={dict.closing}
         common={dict.common}
