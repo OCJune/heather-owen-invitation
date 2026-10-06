@@ -1,0 +1,290 @@
+/*
+ * 타이포그래피 토큰 — Figma 텍스트 스타일과 이름을 맞춘다.
+ * 글꼴 파일은 src/app/fonts.ts에서 불러온다.
+ *   Display · Eyebrow · Accent · Numeral → Cormorant Garamond
+ *   Heading/KO · Body/Serif              → Noto Serif KR
+ *   Body/Sans · Caption · Label          → Noto Sans KR
+ */
+:root {
+  /* 영문 세리프. 한글이 섞이면 Noto Serif KR로 대체된다. */
+  --font-family-display: var(--font-cormorant-garamond), "Noto Serif KR", serif;
+  --font-family-serif: "Noto Serif KR", serif;
+  --font-family-sans: "Noto Sans KR", sans-serif;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+}
+
+@theme inline {
+  --font-display: var(--font-family-display);
+  --font-serif: var(--font-family-serif);
+  --font-sans: var(--font-family-sans);
+}
+
+/*
+ * 텍스트 스타일 유틸리티.
+ * Figma 스타일 "Heading/Section EN" → 클래스 typo-heading-section-en
+ * 글꼴 · 굵기 · 크기 · 줄 간격 · 자간을 한 번에 지정한다. 색은 text-* 로 따로 준다.
+ */
+
+/* Display */
+@utility typo-display-date {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 7.5rem; /* 120px */
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+@utility typo-display-names {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 4.25rem; /* 68px */
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+@utility typo-display-ampersand {
+  font-family: var(--font-family-display);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  font-size: 3.5rem; /* 56px */
+  line-height: normal;
+}
+
+/* Heading — 영문 */
+@utility typo-heading-section-en {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 2.375rem; /* 38px */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility typo-heading-modal-en {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 1.875rem; /* 30px */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* Heading — 국문 */
+@utility typo-heading-ko-large {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.45;
+}
+
+@utility typo-heading-ko-card {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.125rem; /* 18px */
+  line-height: normal;
+}
+
+@utility typo-heading-ko-medium {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.5;
+}
+
+@utility typo-heading-ko-name {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-medium);
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+}
+
+@utility typo-heading-ko-small {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.9375rem; /* 15px */
+  line-height: normal;
+}
+
+/* Body — 명조 */
+@utility typo-body-serif-large {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-light);
+  font-size: 0.875rem; /* 14px */
+  line-height: 2;
+}
+
+@utility typo-body-serif {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-light);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.95;
+}
+
+@utility typo-body-serif-regular {
+  font-family: var(--font-family-serif);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.8125rem; /* 13px */
+  line-height: normal;
+}
+
+/* Body — 고딕 */
+@utility typo-body-sans {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-light);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.75;
+}
+
+@utility typo-body-sans-small {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-light);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.65;
+}
+
+@utility typo-caption-sans {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-light);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.5;
+}
+
+/* Label */
+@utility typo-label-button {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+}
+
+@utility typo-label-strong {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
+
+@utility typo-label-regular {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
+
+@utility typo-label-small {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.75rem; /* 12px */
+  line-height: normal;
+}
+
+@utility typo-label-xsmall {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.6875rem; /* 11px */
+  line-height: normal;
+}
+
+/* Eyebrow — 자간을 넓힌 영문 소제목 */
+@utility typo-eyebrow-en-large {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.75rem; /* 12px */
+  line-height: normal;
+  letter-spacing: 0.4em;
+}
+
+@utility typo-eyebrow-en {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.3;
+  letter-spacing: 0.24em;
+}
+
+@utility typo-eyebrow-en-small {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.625rem; /* 10px */
+  line-height: normal;
+  letter-spacing: 0.2em;
+}
+
+/* Accent */
+@utility typo-accent-script {
+  font-family: var(--font-family-display);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  font-size: 1.875rem; /* 30px */
+  line-height: 1.2;
+}
+
+@utility typo-accent-italic-medium {
+  font-family: var(--font-family-display);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  font-size: 0.9375rem; /* 15px */
+  line-height: normal;
+}
+
+@utility typo-accent-number {
+  font-family: var(--font-family-display);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.3;
+}
+
+@utility typo-accent-toggle {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 1.5rem; /* 24px */
+  line-height: normal;
+}
+
+@utility typo-accent-arrow {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-regular);
+  font-size: 1rem; /* 16px */
+  line-height: normal;
+}
+
+/* Numeral — 날짜 · 숫자 */
+@utility typo-numeral-large {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-light);
+  font-size: 1.25rem; /* 20px */
+  line-height: normal;
+}
+
+@utility typo-numeral-large-strong {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.25rem; /* 20px */
+  line-height: normal;
+}
+
+@utility typo-numeral-d-day {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.125rem; /* 18px */
+  line-height: normal;
+  letter-spacing: 0.1em;
+}
+
+@utility typo-numeral-date-line {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.9375rem; /* 15px */
+  line-height: normal;
+  letter-spacing: 0.08em;
+}
+
+@utility typo-numeral-small {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+}

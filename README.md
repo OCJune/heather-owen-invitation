@@ -66,6 +66,7 @@ pnpm format:check
 src/
 ├── app/                  # Next.js App Router — 전역 설정 + 라우팅 (FSD의 app · pages 레이어 역할)
 │   ├── layout.tsx        # 루트 레이아웃 (폰트, 메타데이터, 전역 Provider)
+│   ├── fonts.ts          # 글꼴 불러오기 (Cormorant Garamond, Noto Serif KR, Noto Sans KR)
 │   ├── page.tsx          # 청첩장 본문: features의 섹션을 순서대로 조립
 │   └── globals.css       # Tailwind 진입점 + styles/ 토큰 import
 ├── features/             # 청첩장 섹션 · 기능 단위 (ui / api / lib / model)
@@ -84,7 +85,7 @@ src/
 │   ├── lib/              # 공통 유틸리티 (cn, date 등)
 │   ├── assets/           # 공용 에셋 (icons, images)
 │   └── types/            # 전역 공통 타입
-└── styles/               # 디자인 토큰 CSS (color.css, typography.css)
+└── styles/               # 디자인 토큰 CSS (color.css, typography.css, spacing.css)
 public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 직접 제공되는 파일)
 ```
 
@@ -210,7 +211,7 @@ PR은 [PR 템플릿](.github/pull_request_template.md)에 맞춰 작성합니다
 - Props는 `interface`로 선언하고 컴포넌트와 함께 export 합니다. 유니온 · 유틸리티 타입은 `type`을 사용합니다.
 - 타입만 가져올 때는 `import type`을 사용합니다.
 - **기본은 Server Component**입니다. 상태 · 이벤트 · 브라우저 API가 필요한 컴포넌트에만 파일 최상단에 `"use client"`를 선언하고, 그 범위를 가능한 한 작게 유지합니다.
-- 이미지는 `next/image`, 폰트는 `next/font`를 사용합니다.
+- 이미지는 `next/image`를 사용합니다. 글꼴은 `src/app/fonts.ts`에서만 불러옵니다. (영문은 `next/font`, 한글은 `@fontsource` 패키지)
 - 컴포넌트 · 훅 · 함수의 의도가 코드만으로 드러나지 않을 때 JSDoc 주석(한국어)을 답니다.
 
 ```tsx
@@ -242,8 +243,25 @@ import { GuestbookMessage } from "./GuestbookMessage";
 #### 스타일
 
 - Tailwind CSS 유틸리티 클래스를 사용하고, 색상 · 글꼴은 **`src/styles/`의 디자인 토큰**만 사용합니다. 임의 색상값(`text-[#141414]`)을 직접 쓰지 않습니다.
-- 토큰 이름은 Figma 변수와 맞춥니다. (예: `color/text/primary` → `--color-text-primary`)
+- 토큰 이름은 Figma 변수 · 텍스트 스타일과 맞춥니다. Tailwind 기본 색상 팔레트(`bg-red-500` 등)는 꺼 두었습니다.
 - 모바일 폭 390px 기준으로 구현합니다.
+
+| 종류          | Figma                                   | 코드 (Tailwind 클래스)                            | 선언 위치               |
+| ------------- | --------------------------------------- | ------------------------------------------------- | ----------------------- |
+| 배경색        | `color/bg/page`                         | `bg-page`                                         | `styles/color.css`      |
+| 글자색        | `color/text/primary`                    | `text-primary`                                    | `styles/color.css`      |
+| 테두리색      | `color/border/strong`                   | `border-strong`                                   | `styles/color.css`      |
+| 아이콘색      | `color/icon/primary`                    | `text-icon-primary`                               | `styles/color.css`      |
+| 텍스트 스타일 | `Heading/Section EN`                    | `typo-heading-section-en`                         | `styles/typography.css` |
+| 글꼴          | Cormorant / 명조 / 고딕                 | `font-display` / `font-serif` / `font-sans`       | `styles/typography.css` |
+| 간격          | `spacing/16` (px)                       | `p-4`, `gap-4` (px ÷ 4)                           | Tailwind 기본 간격      |
+| 레이아웃      | `layout/gutter` · `section-y` · `width` | `px-gutter` · `py-section-y` · `max-w-invitation` | `styles/spacing.css`    |
+
+- 글자는 `typo-*` 클래스로 글꼴 · 크기 · 줄 간격 · 자간을 한 번에 지정하고, 색은 `text-*`로 따로 줍니다.
+
+```tsx
+<h2 className="typo-heading-section-en text-primary">Invitation</h2>
+```
 
 #### 문구 (KO / EN)
 

@@ -1,0 +1,100 @@
+/*
+ * 색상 토큰 — Figma 변수(Primitives, Color 컬렉션)와 이름을 맞춘다.
+ * 컴포넌트에서는 Primitives를 직접 쓰지 않고 의미별 색(Semantic)만 사용한다.
+ */
+:root {
+  /* Primitives — warm (미색 바탕 영역) */
+  --primitive-warm-0: #ffffff;
+  --primitive-warm-50: #f7f6f3;
+  --primitive-warm-100: #efede8;
+  --primitive-warm-150: #e6e4df;
+  --primitive-warm-200: #d9d7d2;
+  --primitive-warm-300: #cfccc6;
+  --primitive-warm-400: #9a9894;
+  --primitive-warm-500: #6b6b6b;
+  --primitive-warm-600: #4a4a4a;
+  --primitive-warm-700: #2a2a2a;
+  --primitive-warm-900: #141414;
+  --primitive-warm-950: #0a0a0a;
+
+  /* Primitives — cool (검정 섹션 위) */
+  --primitive-cool-200: #cfcfcf;
+  --primitive-cool-300: #bdbdbd;
+  --primitive-cool-500: #8c8c8c;
+  --primitive-cool-600: #707070;
+  --primitive-cool-750: #3a3a3a;
+  --primitive-cool-800: #333333;
+
+  /* Semantic — background */
+  --color-bg-page: var(--primitive-warm-50);
+  --color-bg-surface: var(--primitive-warm-0);
+  --color-bg-muted: var(--primitive-warm-100);
+  --color-bg-placeholder: var(--primitive-warm-150);
+  --color-bg-inverse: var(--primitive-warm-900);
+  --color-bg-scrim: var(--primitive-warm-950);
+  --color-bg-inverse-placeholder: var(--primitive-cool-750);
+
+  /* Semantic — text */
+  --color-text-primary: var(--primitive-warm-900);
+  --color-text-body: var(--primitive-warm-700);
+  --color-text-secondary: var(--primitive-warm-600);
+  --color-text-tertiary: var(--primitive-warm-500);
+  --color-text-muted: var(--primitive-warm-400);
+  --color-text-on-inverse: var(--primitive-warm-0);
+  --color-text-on-inverse-secondary: var(--primitive-cool-300);
+  --color-text-on-inverse-tertiary: var(--primitive-cool-500);
+  --color-text-on-inverse-muted: var(--primitive-cool-600);
+  --color-text-on-inverse-subtle: var(--primitive-cool-200);
+
+  /* Semantic — border */
+  --color-border-strong: var(--primitive-warm-900);
+  --color-border-default: var(--primitive-warm-200);
+  --color-border-control: var(--primitive-warm-300);
+  --color-border-muted: var(--primitive-warm-400);
+  --color-border-inverse: var(--primitive-cool-800);
+  --color-border-inverse-strong: var(--primitive-cool-750);
+
+  /* Semantic — icon */
+  --color-icon-primary: var(--primitive-warm-900);
+  --color-icon-muted: var(--primitive-warm-400);
+}
+
+/*
+ * Tailwind 유틸리티 연결.
+ * 기본 팔레트를 비워 토큰에 없는 색(bg-red-500 등)을 쓸 수 없게 한다.
+ *   color/bg/page        → bg-page
+ *   color/text/primary   → text-primary
+ *   color/border/strong  → border-strong
+ *   color/icon/primary   → text-icon-primary (아이콘은 currentColor를 따른다)
+ */
+@theme inline {
+  --color-*: initial;
+
+  --background-color-page: var(--color-bg-page);
+  --background-color-surface: var(--color-bg-surface);
+  --background-color-muted: var(--color-bg-muted);
+  --background-color-placeholder: var(--color-bg-placeholder);
+  --background-color-inverse: var(--color-bg-inverse);
+  --background-color-scrim: var(--color-bg-scrim);
+  --background-color-inverse-placeholder: var(--color-bg-inverse-placeholder);
+
+  --text-color-primary: var(--color-text-primary);
+  --text-color-body: var(--color-text-body);
+  --text-color-secondary: var(--color-text-secondary);
+  --text-color-tertiary: var(--color-text-tertiary);
+  --text-color-muted: var(--color-text-muted);
+  --text-color-on-inverse: var(--color-text-on-inverse);
+  --text-color-on-inverse-secondary: var(--color-text-on-inverse-secondary);
+  --text-color-on-inverse-tertiary: var(--color-text-on-inverse-tertiary);
+  --text-color-on-inverse-muted: var(--color-text-on-inverse-muted);
+  --text-color-on-inverse-subtle: var(--color-text-on-inverse-subtle);
+  --text-color-icon-primary: var(--color-icon-primary);
+  --text-color-icon-muted: var(--color-icon-muted);
+
+  --border-color-strong: var(--color-border-strong);
+  --border-color-default: var(--color-border-default);
+  --border-color-control: var(--color-border-control);
+  --border-color-muted: var(--color-border-muted);
+  --border-color-inverse: var(--color-border-inverse);
+  --border-color-inverse-strong: var(--color-border-inverse-strong);
+}
