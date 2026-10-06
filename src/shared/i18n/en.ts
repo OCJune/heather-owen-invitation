@@ -57,6 +57,7 @@ export const en: Dictionary = {
     next: "NEXT",
     swipeHint: "Swipe to browse",
     openPhoto: "Open photo {index}",
+    loading: "Loading photos",
   },
   location: {
     number: "No. 04",

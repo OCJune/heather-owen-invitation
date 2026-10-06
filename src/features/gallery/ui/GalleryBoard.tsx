@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { Photo } from "@/features/gallery/api/photos";
+import type { PhotoPage } from "@/features/gallery/api/photos";
+import { usePhotos } from "@/features/gallery/model/usePhotos";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { cn } from "@/shared/lib/utils";
 import { AllPhotosModal } from "./AllPhotosModal";
@@ -20,17 +21,48 @@ const PREVIEW_SLOTS = [
 ];
 
 export interface GalleryBoardProps {
-  photos: Photo[];
+  /** 서버에서 미리 가져온 첫 묶음 */
+  initialPage: PhotoPage;
   dict: Dictionary["gallery"];
   closeLabel: string;
 }
 
 /** 사진첩 본문의 미리보기와, 거기서 열리는 전체 보기 · 크게 보기 */
-export function GalleryBoard({ photos, dict, closeLabel }: GalleryBoardProps) {
+export function GalleryBoard({
+  initialPage,
+  dict,
+  closeLabel,
+}: GalleryBoardProps) {
+  const { photos, total, hasMore, loadMore } = usePhotos(initialPage);
   const [isAllOpen, setIsAllOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const previews = photos.slice(0, PREVIEW_SLOTS.length);
+
+  /*
+   * 크게 보기에서 사진을 넘긴다.
+   * 불러온 마지막 사진에서 다음으로 넘기면 다음 묶음을 불러온 뒤 넘어간다.
+   * 처음과 끝은 서로 이어지되, 아직 다 불러오지 않았으면 처음에서 이전으로는 가지 않는다.
+   */
+  const handleMove = async (step: -1 | 1) => {
+    if (viewerIndex === null) return;
+    const next = viewerIndex + step;
+
+    if (next >= photos.length) {
+      if (hasMore) {
+        await loadMore();
+        setViewerIndex(next);
+      } else {
+        setViewerIndex(0);
+      }
+      return;
+    }
+    if (next < 0) {
+      if (!hasMore) setViewerIndex(photos.length - 1);
+      return;
+    }
+    setViewerIndex(next);
+  };
 
   return (
     <>
@@ -61,7 +93,7 @@ export function GalleryBoard({ photos, dict, closeLabel }: GalleryBoardProps) {
         })}
       </ul>
 
-      {photos.length > previews.length && (
+      {total > previews.length && (
         <button
           type="button"
           onClick={() => setIsAllOpen(true)}
@@ -76,6 +108,9 @@ export function GalleryBoard({ photos, dict, closeLabel }: GalleryBoardProps) {
 
       <AllPhotosModal
         photos={photos}
+        total={total}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
         open={isAllOpen}
         onClose={() => setIsAllOpen(false)}
         onSelect={setViewerIndex}
@@ -84,8 +119,9 @@ export function GalleryBoard({ photos, dict, closeLabel }: GalleryBoardProps) {
       />
       <PhotoViewer
         photos={photos}
+        total={total}
         index={viewerIndex}
-        onIndexChange={setViewerIndex}
+        onMove={handleMove}
         onClose={() => setViewerIndex(null)}
         dict={dict}
         closeLabel={closeLabel}

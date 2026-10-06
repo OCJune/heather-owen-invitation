@@ -13,7 +13,8 @@ export async function GallerySection({
   dict,
   closeLabel,
 }: GallerySectionProps) {
-  const photos = await getPhotos();
+  // 첫 묶음만 서버에서 가져오고, 나머지는 전체 보기에서 스크롤할 때 이어서 불러온다.
+  const initialPage = await getPhotos();
 
   return (
     <section className="flex flex-col px-gutter py-section-y">
@@ -23,7 +24,11 @@ export async function GallerySection({
         subtitle={dict.subtitle}
       />
       <div className="mt-9 flex flex-col">
-        <GalleryBoard photos={photos} dict={dict} closeLabel={closeLabel} />
+        <GalleryBoard
+          initialPage={initialPage}
+          dict={dict}
+          closeLabel={closeLabel}
+        />
       </div>
     </section>
   );

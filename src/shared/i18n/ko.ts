@@ -64,6 +64,7 @@ export const ko = {
     next: "NEXT",
     swipeHint: "좌우로 넘겨보세요",
     openPhoto: "{index}번 사진 크게 보기",
+    loading: "사진을 불러오는 중",
   },
   location: {
     number: "No. 04",

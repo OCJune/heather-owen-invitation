@@ -13,10 +13,14 @@ const SWIPE_THRESHOLD = 40;
 const pad = (value: number) => String(value).padStart(2, "0");
 
 export interface PhotoViewerProps {
+  /** 지금까지 불러온 사진들 */
   photos: Photo[];
+  /** 사진첩 전체 사진 수 */
+  total: number;
   /** 보고 있는 사진의 순번(0부터). null이면 닫힌 상태다. */
   index: number | null;
-  onIndexChange: (index: number) => void;
+  /** 이전(-1) · 다음(+1) 사진으로 넘길 때 호출된다. */
+  onMove: (step: -1 | 1) => void;
   onClose: () => void;
   dict: Dictionary["gallery"];
   closeLabel: string;
@@ -25,8 +29,9 @@ export interface PhotoViewerProps {
 /** 사진 크게 보기. 좌우로 밀거나 PREV / NEXT, 방향키로 넘긴다. */
 export function PhotoViewer({
   photos,
+  total,
   index,
-  onIndexChange,
+  onMove,
   onClose,
   dict,
   closeLabel,
@@ -35,15 +40,11 @@ export function PhotoViewer({
   const isOpen = index !== null;
   const current = index ?? 0;
 
-  const move = (step: number) => {
-    onIndexChange((current + step + photos.length) % photos.length);
-  };
-
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") move(-1);
-      if (event.key === "ArrowRight") move(1);
+      if (event.key === "ArrowLeft") onMove(-1);
+      if (event.key === "ArrowRight") onMove(1);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -54,7 +55,7 @@ export function PhotoViewer({
     const distance = event.changedTouches[0].clientX - touchStartX.current;
     touchStartX.current = null;
     if (Math.abs(distance) < SWIPE_THRESHOLD) return;
-    move(distance < 0 ? 1 : -1);
+    onMove(distance < 0 ? 1 : -1);
   };
 
   return (
@@ -68,7 +69,7 @@ export function PhotoViewer({
       <div className="flex h-full flex-col">
         <div className="flex h-18 shrink-0 items-center justify-between pt-4 pr-5 pl-gutter">
           <p className="typo-numeral-small tracking-[0.1em] text-on-inverse">
-            {pad(current + 1)} / {pad(photos.length)}
+            {pad(current + 1)} / {pad(total)}
           </p>
           <button
             type="button"
@@ -101,7 +102,7 @@ export function PhotoViewer({
           <div className="flex items-center justify-between px-gutter">
             <button
               type="button"
-              onClick={() => move(-1)}
+              onClick={() => onMove(-1)}
               className="flex cursor-pointer items-center gap-2 typo-eyebrow-en text-on-inverse-tertiary"
             >
               <Icon
@@ -116,7 +117,7 @@ export function PhotoViewer({
             </p>
             <button
               type="button"
-              onClick={() => move(1)}
+              onClick={() => onMove(1)}
               className="flex cursor-pointer items-center gap-2 typo-eyebrow-en text-on-inverse-tertiary"
             >
               {dict.next}
