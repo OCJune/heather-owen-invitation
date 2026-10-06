@@ -65,10 +65,11 @@ pnpm format:check
 ```
 src/
 ├── app/                  # Next.js App Router — 전역 설정 + 라우팅 (FSD의 app · pages 레이어 역할)
-│   ├── layout.tsx        # 루트 레이아웃 (폰트, 메타데이터, 전역 Provider)
+│   ├── [locale]/         # 언어별 경로 (ko, en)
+│   │   ├── layout.tsx    # 루트 레이아웃 (<html lang>, 글꼴, 메타데이터)
+│   │   ├── page.tsx      # 청첩장 본문: features의 섹션을 순서대로 조립
+│   │   └── test/page.tsx # 공용 UI 테스트 페이지 (개발 환경 전용)
 │   ├── fonts.ts          # 글꼴 불러오기 (Cormorant Garamond, Noto Serif KR, Noto Sans KR)
-│   ├── page.tsx          # 청첩장 본문: features의 섹션을 순서대로 조립
-│   ├── test/page.tsx     # 공용 UI 테스트 페이지 (개발 환경 전용)
 │   └── globals.css       # Tailwind 진입점 + styles/ 토큰 import
 ├── features/             # 청첩장 섹션 · 기능 단위 (ui / api / lib / model)
 │   ├── cover/            # 커버 (이름, 메인 사진, 일시 · 장소, 언어 전환)
@@ -82,15 +83,33 @@ src/
 │   └── closing/          # 마무리 인사, 공유
 ├── shared/               # 공용 모듈 (도메인 비의존)
 │   ├── ui/               # 공용 UI 컴포넌트 (아래 표 참고)
-│   ├── hooks/            # 공용 훅
-│   ├── lib/              # 공통 유틸리티 (cn, date 등)
+│   ├── hooks/            # 공용 훅 (useCopy)
+│   ├── lib/              # 공통 유틸리티 (cn)
+│   ├── i18n/             # 언어별 문구 사전 (ko.ts, en.ts, getDictionary)
+│   ├── config/           # 언어와 무관한 예식 정보 (날짜, 영문 이름 등)
 │   ├── assets/           # 공용 에셋 (icons, images)
 │   └── types/            # 전역 공통 타입
 └── styles/               # 디자인 토큰 CSS (color.css, typography.css, spacing.css)
 public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 직접 제공되는 파일)
 ```
 
-> `features/` 하위 폴더는 해당 섹션을 구현할 때 만듭니다. 위 목록은 Figma 디자인의 섹션 구성을 기준으로 한 계획입니다.
+### 경로
+
+| 경로                   | 설명                                              |
+| ---------------------- | ------------------------------------------------- |
+| `/`                    | 한국어 청첩장 (`next.config.ts`에서 `/ko`로 연결) |
+| `/en`                  | 영어 청첩장                                       |
+| `/ko/test`, `/en/test` | 공용 UI 테스트 페이지 (개발 환경 전용)            |
+
+### 예시 데이터 (노션 연동 전)
+
+사진 · 방명록 · 참석 의사는 아직 서버에 연결되어 있지 않고, 각 feature의 `api/`에 있는 **예시 구현**으로 동작합니다. 연동할 때는 함수의 모양(인자 · 반환값)은 그대로 두고 안쪽만 바꿉니다.
+
+| 파일                                     | 지금 동작                                                                                                   |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `features/gallery/api/photos.ts`         | 사진 없는 자리 21개를 돌려줌 (회색 자리 표시로 보임)                                                        |
+| `features/guestbook/api/guestbookApi.ts` | 예시 메시지 5개. 작성 · 삭제는 화면에만 반영되고 새로고침하면 사라짐 (예시 메시지의 삭제 비밀번호는 `0000`) |
+| `features/rsvp/api/rsvpApi.ts`           | 아무 데도 저장하지 않고 완료 화면만 보여줌                                                                  |
 
 ### 레이어 규칙
 
@@ -115,7 +134,7 @@ public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 �
 
 ### 공용 UI 컴포넌트
 
-Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm dev` 실행 후 [`/test`](http://localhost:3000/test)에서 한눈에 확인할 수 있습니다. (프로덕션 빌드에서는 404)
+Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm dev` 실행 후 [`/ko/test`](http://localhost:3000/ko/test)에서 한눈에 확인할 수 있습니다. (프로덕션 빌드에서는 404)
 
 | Figma 컴포넌트             | 코드                                          | 비고                                                 |
 | -------------------------- | --------------------------------------------- | ---------------------------------------------------- |
@@ -133,6 +152,7 @@ Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm d
 | Account Row                | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠                  |
 | Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 제목 줄을 눌러 여닫음 (+ / −)                        |
 
+- 모달은 `shared/ui/Modal/Modal.tsx`를 씁니다. `variant`로 가운데 창(`center`) · 아래에서 올라오는 창(`sheet`) · 전체 화면(`full`)을 고릅니다.
 - 아이콘을 추가할 때는 Figma에서 내보낸 SVG를 `shared/assets/icons/`에 넣고 `Icon.tsx`의 `ICONS`에 등록합니다.
 
 ---
@@ -288,7 +308,9 @@ import { GuestbookMessage } from "./GuestbookMessage";
 
 #### 문구 (KO / EN)
 
-- 화면에 보이는 문구는 컴포넌트에 직접 쓰지 않고 언어별 사전에서 가져옵니다. 문구를 추가 · 수정할 때는 KO / EN을 함께 수정합니다.
+- 화면에 보이는 문구는 컴포넌트에 직접 쓰지 않고 언어별 사전(`src/shared/i18n/ko.ts`, `en.ts`)에서 가져옵니다. 문구를 추가 · 수정할 때는 KO / EN을 함께 수정합니다.
+- 사전의 모양은 한국어 사전(`ko.ts`)이 기준입니다. 영어 사전에 빠진 항목이 있으면 타입 오류가 납니다.
+- 섹션 컴포넌트는 사전에서 자기 부분만 `dict`로 받습니다. (예: `<CoverSection dict={dict.cover} />`)
 
 #### 포맷
 
