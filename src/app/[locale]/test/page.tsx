@@ -98,8 +98,14 @@ export default function TestPage() {
 
       <Block title="Language Toggle">
         <div className="flex gap-6">
-          <LanguageToggle active="ko" hrefs={{ ko: "/test", en: "/test" }} />
-          <LanguageToggle active="en" hrefs={{ ko: "/test", en: "/test" }} />
+          <LanguageToggle
+            active="ko"
+            hrefs={{ ko: "/ko/test", en: "/en/test" }}
+          />
+          <LanguageToggle
+            active="en"
+            hrefs={{ ko: "/ko/test", en: "/en/test" }}
+          />
         </div>
       </Block>
 
