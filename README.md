@@ -10,6 +10,7 @@
 | ------------- | ----------------------------------------------- |
 | 코어 · 빌드   | Next.js 16 (App Router), React 19, TypeScript 5 |
 | 스타일 · UI   | Tailwind CSS 4                                  |
+| 서버 상태     | TanStack Query 5                                |
 | 코드 품질     | ESLint 9 (`eslint-config-next`), Prettier 3     |
 | 패키지 매니저 | pnpm                                            |
 
@@ -70,6 +71,7 @@ src/
 │   │   ├── page.tsx      # 청첩장 본문: features의 섹션을 순서대로 조립
 │   │   └── test/page.tsx # 공용 UI 테스트 페이지 (개발 환경 전용)
 │   ├── fonts.ts          # 글꼴 불러오기 (Cormorant Garamond, Noto Serif KR, Noto Sans KR)
+│   ├── providers.tsx     # 전역 Provider (TanStack Query)
 │   └── globals.css       # Tailwind 진입점 + styles/ 토큰 import
 ├── features/             # 청첩장 섹션 · 기능 단위 (ui / api / lib / model)
 │   ├── cover/            # 커버 (이름, 메인 사진, 일시 · 장소, 언어 전환)
@@ -84,7 +86,7 @@ src/
 ├── shared/               # 공용 모듈 (도메인 비의존)
 │   ├── ui/               # 공용 UI 컴포넌트 (아래 표 참고)
 │   ├── hooks/            # 공용 훅 (useCopy)
-│   ├── lib/              # 공통 유틸리티 (cn)
+│   ├── lib/              # 공통 유틸리티 (cn, getQueryClient)
 │   ├── i18n/             # 언어별 문구 사전 (ko.ts, en.ts, getDictionary)
 │   ├── config/           # 언어와 무관한 예식 정보 (날짜, 영문 이름 등)
 │   ├── assets/           # 공용 에셋 (icons, images)
@@ -304,6 +306,30 @@ import { GuestbookMessage } from "./GuestbookMessage";
 
 ```tsx
 <h2 className="typo-heading-section-en text-primary">Invitation</h2>
+```
+
+#### 서버 데이터 (TanStack Query)
+
+- 서버에서 가져오는 데이터는 TanStack Query로 다룹니다. 쿼리 설정(`queryKey`, `queryFn`)은 feature의 `api/`에 `~QueryOptions` 함수로 두고, 서버와 브라우저가 같은 설정을 씁니다. (예: `features/gallery/api/photoQueries.ts`)
+- 첫 화면에 필요한 데이터는 Server Component에서 미리 가져와 `HydrationBoundary`로 넘깁니다. `QueryClient`는 `getQueryClient()`(`shared/lib/queryClient.ts`)로 얻습니다.
+
+```tsx
+// Server Component
+const queryClient = getQueryClient();
+await queryClient.prefetchInfiniteQuery(photosInfiniteQueryOptions());
+
+return (
+  <HydrationBoundary state={dehydrate(queryClient)}>
+    <GalleryBoard />
+  </HydrationBoundary>
+);
+```
+
+```tsx
+// Client Component
+const { data, fetchNextPage } = useSuspenseInfiniteQuery(
+  photosInfiniteQueryOptions(),
+);
 ```
 
 #### 문구 (KO / EN)
