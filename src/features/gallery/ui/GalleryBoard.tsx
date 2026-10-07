@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { PhotoPage } from "@/features/gallery/api/photos";
 import { usePhotos } from "@/features/gallery/model/usePhotos";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { cn } from "@/shared/lib/utils";
@@ -21,19 +20,13 @@ const PREVIEW_SLOTS = [
 ];
 
 export interface GalleryBoardProps {
-  /** 서버에서 미리 가져온 첫 묶음 */
-  initialPage: PhotoPage;
   dict: Dictionary["gallery"];
   closeLabel: string;
 }
 
 /** 사진첩 본문의 미리보기와, 거기서 열리는 전체 보기 · 크게 보기 */
-export function GalleryBoard({
-  initialPage,
-  dict,
-  closeLabel,
-}: GalleryBoardProps) {
-  const { photos, total, hasMore, loadMore } = usePhotos(initialPage);
+export function GalleryBoard({ dict, closeLabel }: GalleryBoardProps) {
+  const { photos, total, hasMore, loadMore } = usePhotos();
   const [isAllOpen, setIsAllOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 

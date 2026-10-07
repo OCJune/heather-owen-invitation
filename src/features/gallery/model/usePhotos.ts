@@ -1,11 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import {
-  getPhotos,
-  type Photo,
-  type PhotoPage,
-} from "@/features/gallery/api/photos";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react";
+import { photosInfiniteQueryOptions } from "@/features/gallery/api/photoQueries";
+import type { Photo } from "@/features/gallery/api/photos";
 
 export interface UsePhotosReturn {
   /** 지금까지 불러온 사진들 */
@@ -14,38 +12,35 @@ export interface UsePhotosReturn {
   total: number;
   /** 아직 불러오지 않은 사진이 남았는지 */
   hasMore: boolean;
-  isLoading: boolean;
+  /** 다음 묶음을 불러오는 중인지 */
+  isLoadingMore: boolean;
   /** 다음 묶음을 불러온다. 불러오는 중이거나 더 없으면 아무 일도 하지 않는다. */
   loadMore: () => Promise<void>;
 }
 
-/** 사진을 한 묶음씩 이어서 불러오는 상태를 관리하는 훅 */
-export function usePhotos(initialPage: PhotoPage): UsePhotosReturn {
-  const [photos, setPhotos] = useState(initialPage.photos);
-  const [nextCursor, setNextCursor] = useState(initialPage.nextCursor);
-  const [isLoading, setIsLoading] = useState(false);
-  const isLoadingRef = useRef(false);
+/**
+ * 사진을 한 묶음씩 이어서 불러오는 훅.
+ * 첫 묶음은 서버에서 미리 가져와 `HydrationBoundary`로 넘겨받는다.
+ */
+export function usePhotos(): UsePhotosReturn {
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useSuspenseInfiniteQuery(photosInfiniteQueryOptions());
+
+  const photos = useMemo(
+    () => data.pages.flatMap((page) => page.photos),
+    [data.pages],
+  );
 
   const loadMore = useCallback(async () => {
-    if (isLoadingRef.current || nextCursor === null) return;
-
-    isLoadingRef.current = true;
-    setIsLoading(true);
-    try {
-      const page = await getPhotos({ cursor: nextCursor });
-      setPhotos((prev) => [...prev, ...page.photos]);
-      setNextCursor(page.nextCursor);
-    } finally {
-      isLoadingRef.current = false;
-      setIsLoading(false);
-    }
-  }, [nextCursor]);
+    if (!hasNextPage || isFetchingNextPage) return;
+    await fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return {
     photos,
-    total: initialPage.total,
-    hasMore: nextCursor !== null,
-    isLoading,
+    total: data.pages[0].total,
+    hasMore: hasNextPage,
+    isLoadingMore: isFetchingNextPage,
     loadMore,
   };
 }
