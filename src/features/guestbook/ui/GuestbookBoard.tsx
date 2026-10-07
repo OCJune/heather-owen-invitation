@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { GuestbookEntry } from "@/features/guestbook/api/guestbookApi";
+import { useGuestbookEntries } from "@/features/guestbook/model/useGuestbook";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/Button/Button";
@@ -14,19 +14,13 @@ import { GuestbookWriteSheet } from "./GuestbookWriteSheet";
 const PAGE_SIZE = 3;
 
 export interface GuestbookBoardProps {
-  /** 처음 보여줄 메시지 (최신순) */
-  initialEntries: GuestbookEntry[];
   dict: Dictionary["guestbook"];
   closeLabel: string;
 }
 
 /** 방명록 목록과 쪽 넘김, 거기서 열리는 작성 창 · 삭제 확인 창 */
-export function GuestbookBoard({
-  initialEntries,
-  dict,
-  closeLabel,
-}: GuestbookBoardProps) {
-  const [entries, setEntries] = useState(initialEntries);
+export function GuestbookBoard({ dict, closeLabel }: GuestbookBoardProps) {
+  const { data: entries } = useGuestbookEntries();
   const [page, setPage] = useState(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isWriting, setIsWriting] = useState(false);
@@ -38,15 +32,10 @@ export function GuestbookBoard({
     ? entries
     : entries.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const handleCreated = (entry: GuestbookEntry) => {
-    setEntries((prev) => [entry, ...prev]);
+  // 새 메시지는 맨 앞에 오므로 첫 쪽으로 돌아간다.
+  const handleCreated = () => {
     setPage(1);
     setIsWriting(false);
-  };
-
-  const handleDeleted = (id: string) => {
-    setEntries((prev) => prev.filter((entry) => entry.id !== id));
-    setDeletingId(null);
   };
 
   return (
@@ -147,7 +136,7 @@ export function GuestbookBoard({
           <GuestbookDeleteDialog
             entryId={deletingId}
             dict={dict.remove}
-            onDeleted={handleDeleted}
+            onDeleted={() => setDeletingId(null)}
             onClose={() => setDeletingId(null)}
           />
         )}

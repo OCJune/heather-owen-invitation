@@ -13,9 +13,16 @@ export interface CreateGuestbookRequest {
   message: string;
 }
 
+export interface DeleteGuestbookRequest {
+  id: string;
+  /** 작성할 때 넣은 비밀번호 */
+  password: string;
+}
+
 const MOCK_DELAY_MS = 300;
-/** 예시 구현에서 이번 방문 동안 새로 쓴 메시지의 비밀번호를 기억해 둔다. */
-const mockPasswords = new Map<string, string>();
+
+/** 예시 구현의 저장소. 이번 방문 동안 쓴 메시지를 최신순으로 기억하고, 새로고침하면 비워진다. */
+let mockStore: (GuestbookEntry & { password: string })[] = [];
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
 
@@ -24,9 +31,14 @@ const wait = () => new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
  * 노션 연동 이슈에서 함수 안을 서버 호출로 바꾸고, 함수의 모양(인자 · 반환값)은 그대로 둔다.
  */
 
-/** 방명록 메시지를 최신순으로 가져온다. 연동 전이라 비어 있다. */
+/** 방명록 메시지를 최신순으로 가져온다. */
 export async function getGuestbookEntries(): Promise<GuestbookEntry[]> {
-  return [];
+  return mockStore.map(({ id, name, date, message }) => ({
+    id,
+    name,
+    date,
+    message,
+  }));
 }
 
 /** 방명록 메시지를 남기고, 저장된 메시지를 돌려준다. */
@@ -43,16 +55,21 @@ export async function createGuestbookEntry(
     date: `${pad(now.getMonth() + 1)}.${pad(now.getDate())}`,
     message: request.message,
   };
-  mockPasswords.set(entry.id, request.password);
+  mockStore = [{ ...entry, password: request.password }, ...mockStore];
 
   return entry;
 }
 
-/** 방명록 메시지를 지운다. 비밀번호가 맞지 않으면 false를 돌려준다. */
-export async function deleteGuestbookEntry(
-  id: string,
-  password: string,
-): Promise<boolean> {
+/** 방명록 메시지를 지운다. 비밀번호가 맞지 않으면 지우지 않고 false를 돌려준다. */
+export async function deleteGuestbookEntry({
+  id,
+  password,
+}: DeleteGuestbookRequest): Promise<boolean> {
   await wait();
-  return mockPasswords.get(id) === password;
+
+  const target = mockStore.find((entry) => entry.id === id);
+  if (!target || target.password !== password) return false;
+
+  mockStore = mockStore.filter((entry) => entry.id !== id);
+  return true;
 }

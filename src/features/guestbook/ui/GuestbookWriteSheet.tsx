@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import {
-  createGuestbookEntry,
-  type GuestbookEntry,
-} from "@/features/guestbook/api/guestbookApi";
+import { useCreateGuestbookEntry } from "@/features/guestbook/model/useGuestbook";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { Button } from "@/shared/ui/Button/Button";
 import { Icon } from "@/shared/ui/Icon/Icon";
@@ -17,7 +13,7 @@ export interface GuestbookWriteSheetProps {
   dict: Dictionary["guestbook"]["sheet"];
   closeLabel: string;
   /** 메시지가 저장됐을 때 호출된다. */
-  onCreated: (entry: GuestbookEntry) => void;
+  onCreated: () => void;
   onClose: () => void;
 }
 
@@ -28,23 +24,20 @@ export function GuestbookWriteSheet({
   onCreated,
   onClose,
 }: GuestbookWriteSheetProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: createEntry, isPending } = useCreateGuestbookEntry();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    setIsSubmitting(true);
-    try {
-      const entry = await createGuestbookEntry({
+    createEntry(
+      {
         name: String(data.get("name")).trim(),
         password: String(data.get("password")),
         message: String(data.get("message")).trim(),
-      });
-      onCreated(entry);
-    } finally {
-      setIsSubmitting(false);
-    }
+      },
+      { onSuccess: onCreated },
+    );
   };
 
   return (
@@ -103,7 +96,7 @@ export function GuestbookWriteSheet({
       />
       <p className="typo-caption-sans text-muted">{dict.note}</p>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
+      <Button type="submit" disabled={isPending} className="w-full">
         {dict.submit}
       </Button>
     </form>

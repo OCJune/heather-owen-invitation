@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deleteGuestbookEntry } from "@/features/guestbook/api/guestbookApi";
+import { useDeleteGuestbookEntry } from "@/features/guestbook/model/useGuestbook";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { Button } from "@/shared/ui/Button/Button";
 import { Input } from "@/shared/ui/Input/Input";
@@ -11,7 +11,7 @@ export interface GuestbookDeleteDialogProps {
   entryId: string;
   dict: Dictionary["guestbook"]["remove"];
   /** 삭제에 성공했을 때 호출된다. */
-  onDeleted: (id: string) => void;
+  onDeleted: () => void;
   onClose: () => void;
 }
 
@@ -22,21 +22,22 @@ export function GuestbookDeleteDialog({
   onDeleted,
   onClose,
 }: GuestbookDeleteDialogProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: deleteEntry, isPending } = useDeleteGuestbookEntry();
   const [isWrong, setIsWrong] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const password = String(new FormData(event.currentTarget).get("password"));
 
-    setIsSubmitting(true);
-    try {
-      const isDeleted = await deleteGuestbookEntry(entryId, password);
-      if (isDeleted) onDeleted(entryId);
-      else setIsWrong(true);
-    } finally {
-      setIsSubmitting(false);
-    }
+    deleteEntry(
+      { id: entryId, password },
+      {
+        onSuccess: (isDeleted) => {
+          if (isDeleted) onDeleted();
+          else setIsWrong(true);
+        },
+      },
+    );
   };
 
   return (
@@ -68,7 +69,7 @@ export function GuestbookDeleteDialog({
         <Button variant="secondary" onClick={onClose} className="flex-1">
           {dict.cancel}
         </Button>
-        <Button type="submit" disabled={isSubmitting} className="flex-1">
+        <Button type="submit" disabled={isPending} className="flex-1">
           {dict.confirm}
         </Button>
       </div>
