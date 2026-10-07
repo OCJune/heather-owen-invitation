@@ -4,6 +4,7 @@ import { getDictionary } from "@/shared/i18n/getDictionary";
 import { isLocale, LOCALES } from "@/shared/types/locale";
 import { fontVariables } from "../fonts";
 import "../globals.css";
+import { Providers } from "../providers";
 
 /** 지원하는 언어 경로만 만들고, 그 밖의 주소는 404로 보낸다. */
 export const dynamicParams = false;
@@ -31,7 +32,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={fontVariables}>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
