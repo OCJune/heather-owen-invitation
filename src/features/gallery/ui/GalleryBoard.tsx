@@ -44,8 +44,8 @@ export function GalleryBoard({ dict, closeLabel }: GalleryBoardProps) {
 
     if (next >= photos.length) {
       if (hasMore) {
-        await loadMore();
-        setViewerIndex(next);
+        // 불러오지 못했으면 지금 사진에 머문다.
+        if (await loadMore()) setViewerIndex(next);
       } else {
         setViewerIndex(0);
       }
