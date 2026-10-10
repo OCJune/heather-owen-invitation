@@ -186,24 +186,7 @@ export const ko = {
     subtitle: "마음 전하실 곳" as string | undefined,
     intro:
       "직접 축하를 전하기 어려운 분들을 위해\n계좌번호를 함께 안내드립니다.\n보내주시는 마음, 오래도록 감사히 간직하겠습니다.",
-    groups: [
-      {
-        title: "신랑측 계좌",
-        accounts: [
-          { holder: "신랑 이종찬", account: "국민 000000-00-000000" },
-          { holder: "부 이규장", account: "신한 000-000-000000" },
-          { holder: "모 전경자", account: "농협 000-0000-0000-00" },
-        ],
-      },
-      {
-        title: "신부측 계좌",
-        accounts: [
-          { holder: "신부 임현지", account: "우리 0000-000-000000" },
-          { holder: "부 임건혁", account: "하나 000-000000-00000" },
-          { holder: "모 정정훈", account: "기업 000-000000-00-000" },
-        ],
-      },
-    ],
+    groups: { groom: "신랑측 계좌", bride: "신부측 계좌" },
   },
   guestbook: {
     number: "No. 06",

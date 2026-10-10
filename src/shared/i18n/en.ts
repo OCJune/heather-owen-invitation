@@ -186,33 +186,7 @@ export const en: Dictionary = {
     subtitle: undefined,
     intro:
       "For those who wish to send their blessings\nfrom afar, our account details are below.\nWe will treasure your kindness always.",
-    groups: [
-      {
-        title: "Groom's side",
-        accounts: [
-          {
-            holder: "Groom · Jongchan Lee",
-            account: "KB Kookmin 000000-00-000000",
-          },
-          {
-            holder: "Father · Kyujang Lee",
-            account: "Shinhan 000-000-000000",
-          },
-          { holder: "Mother · Kyungja Jeon", account: "NH 000-0000-0000-00" },
-        ],
-      },
-      {
-        title: "Bride's side",
-        accounts: [
-          { holder: "Bride · Hyunji Lim", account: "Woori 0000-000-000000" },
-          { holder: "Father · Gunhyuk Lim", account: "Hana 000-000000-00000" },
-          {
-            holder: "Mother · Junghoon Jung",
-            account: "IBK 000-000000-00-000",
-          },
-        ],
-      },
-    ],
+    groups: { groom: "Groom's side", bride: "Bride's side" },
   },
   guestbook: {
     number: "No. 06",

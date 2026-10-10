@@ -29,7 +29,7 @@ export default async function InvitationPage({
       <GallerySection dict={dict.gallery} closeLabel={closeLabel} />
       <LocationSection dict={dict.location} common={dict.common} />
       <RsvpSection dict={dict.rsvp} closeLabel={closeLabel} />
-      <GiftSection dict={dict.gift} common={dict.common} />
+      <GiftSection locale={locale} dict={dict.gift} common={dict.common} />
       <GuestbookSection dict={dict.guestbook} closeLabel={closeLabel} />
       <ClosingSection
         dict={dict.closing}
