@@ -173,6 +173,7 @@ export const ko = {
       consentDetail:
         "수집 항목: 성함, 연락처, 참석 여부\n이용 목적: 예식 참석 인원 확인 및 안내\n보관 기간: 예식 종료 후 1개월 이내 파기",
       submit: "참석 의사 전달하기",
+      error: "전송하지 못했습니다. 잠시 후 다시 시도해주세요.",
     },
     done: {
       title: "전달되었습니다",
@@ -186,24 +187,7 @@ export const ko = {
     subtitle: "마음 전하실 곳" as string | undefined,
     intro:
       "직접 축하를 전하기 어려운 분들을 위해\n계좌번호를 함께 안내드립니다.\n보내주시는 마음, 오래도록 감사히 간직하겠습니다.",
-    groups: [
-      {
-        title: "신랑측 계좌",
-        accounts: [
-          { holder: "신랑 이종찬", account: "국민 000000-00-000000" },
-          { holder: "부 이규장", account: "신한 000-000-000000" },
-          { holder: "모 전경자", account: "농협 000-0000-0000-00" },
-        ],
-      },
-      {
-        title: "신부측 계좌",
-        accounts: [
-          { holder: "신부 임현지", account: "우리 0000-000-000000" },
-          { holder: "부 임건혁", account: "하나 000-000000-00000" },
-          { holder: "모 정정훈", account: "기업 000-000000-00-000" },
-        ],
-      },
-    ],
+    groups: { groom: "신랑측 계좌", bride: "신부측 계좌" },
   },
   guestbook: {
     number: "No. 06",
@@ -228,12 +212,14 @@ export const ko = {
       },
       note: "비밀번호는 메시지를 삭제할 때 필요합니다.",
       submit: "남기기",
+      error: "전송하지 못했습니다. 잠시 후 다시 시도해주세요.",
     },
     remove: {
       title: "메시지를 삭제할까요?",
       body: "작성할 때 입력한 비밀번호를 입력해주세요.",
       placeholder: "비밀번호",
       wrong: "비밀번호가 일치하지 않습니다.",
+      error: "삭제하지 못했습니다. 잠시 후 다시 시도해주세요.",
       cancel: "취소",
       confirm: "삭제",
     },

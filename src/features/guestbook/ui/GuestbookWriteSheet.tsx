@@ -24,7 +24,7 @@ export function GuestbookWriteSheet({
   onCreated,
   onClose,
 }: GuestbookWriteSheetProps) {
-  const { mutate: createEntry, isPending } = useCreateGuestbookEntry();
+  const { mutate: createEntry, isPending, isError } = useCreateGuestbookEntry();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,9 +96,14 @@ export function GuestbookWriteSheet({
       />
       <p className="typo-caption-sans text-muted">{dict.note}</p>
 
-      <Button type="submit" disabled={isPending} className="w-full">
-        {dict.submit}
-      </Button>
+      <div className="flex flex-col gap-3">
+        <p role="alert" className="typo-caption-sans text-primary empty:hidden">
+          {isError && dict.error}
+        </p>
+        <Button type="submit" disabled={isPending} className="w-full">
+          {dict.submit}
+        </Button>
+      </div>
     </form>
   );
 }

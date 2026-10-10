@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Photo } from "@/features/gallery/api/photos";
 import type { Dictionary } from "@/shared/i18n/ko";
+import type { Photo } from "@/shared/types/photo";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Modal } from "@/shared/ui/Modal/Modal";
 import { GalleryPhoto } from "./GalleryPhoto";
@@ -39,6 +39,8 @@ export function PhotoViewer({
   const touchStartX = useRef<number | null>(null);
   const isOpen = index !== null;
   const current = index ?? 0;
+  // 노션에서 사진이 지워져 목록이 짧아지면 보던 순번의 사진이 없을 수 있다.
+  const photo = photos.at(current);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -88,15 +90,15 @@ export function PhotoViewer({
             }}
             onTouchEnd={handleTouchEnd}
           >
-            <GalleryPhoto
-              photo={photos[current]}
-              label={`PHOTO ${pad(current + 1)}`}
-              sizeHint="390 × 520"
-              sizes="(max-width: 390px) 100vw, 390px"
-              fit="contain"
-              inverse
-              className="aspect-3/4 max-h-[calc(100dvh-13rem)] w-full"
-            />
+            {photo && (
+              <GalleryPhoto
+                photo={photo}
+                sizes="(max-width: 390px) 100vw, 390px"
+                fit="contain"
+                inverse
+                className="aspect-3/4 max-h-[calc(100dvh-13rem)] w-full"
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between px-gutter">
