@@ -2,6 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import type { PageObjectResponse } from "@notionhq/client";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import type { Photo, PhotoPlacement } from "@/shared/types/photo";
 import { uploadRemoteImage } from "./cloudinary";
 import {
@@ -108,11 +109,16 @@ async function loadPhotos(): Promise<PhotosByPlacement> {
   return photos;
 }
 
-/** 공개된 사진 전체. 노션 웹훅이 오거나 1시간이 지나면 다시 가져온다. */
-const getCachedPhotos = unstable_cache(loadPhotos, ["notion-photos"], {
-  tags: [CACHE_TAGS.photos],
-  revalidate: 3600,
-});
+/**
+ * 공개된 사진 전체. 노션 웹훅이 오거나 1시간이 지나면 다시 가져온다.
+ * 한 화면을 그리는 동안 여러 섹션이 불러도 한 번만 가져오도록 `cache`로 한 번 더 감싼다.
+ */
+const getCachedPhotos = cache(
+  unstable_cache(loadPhotos, ["notion-photos"], {
+    tags: [CACHE_TAGS.photos],
+    revalidate: 3600,
+  }),
+);
 
 /** 한 자리에 놓일 사진들을 순서대로 가져온다. */
 export async function getPhotosByPlacement(
