@@ -86,6 +86,9 @@ const getCachedAccounts = unstable_cache(loadAccounts, ["notion-accounts"], {
 
 /** 공개된 계좌를 순서대로, 해당 언어의 표기로 가져온다. */
 export async function getAccounts(locale: Locale): Promise<Account[]> {
+  // 노션이 설정되지 않았을 때의 빈 결과는 캐시에 남기지 않는다.
+  if (!getDataSourceId("accounts")) return [];
+
   const records = await getCachedAccounts();
 
   return records.map(({ id, side, holder, bank, number }) => ({

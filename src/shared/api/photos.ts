@@ -118,6 +118,9 @@ const getCachedPhotos = unstable_cache(loadPhotos, ["notion-photos"], {
 export async function getPhotosByPlacement(
   placement: PhotoPlacement,
 ): Promise<Photo[]> {
+  // 노션이 설정되지 않았을 때의 빈 결과는 캐시에 남기지 않는다.
+  if (!getDataSourceId("photos")) return [];
+
   return (await getCachedPhotos())[placement];
 }
 

@@ -101,6 +101,9 @@ const getCachedEntries = unstable_cache(
 
 /** 방명록 메시지를 최신순으로 가져온다. */
 export async function getGuestbookEntries(): Promise<GuestbookEntry[]> {
+  // 노션이 설정되지 않았을 때의 빈 결과는 캐시에 남기지 않는다.
+  if (!getDataSourceId("guestbook")) return [];
+
   return getCachedEntries();
 }
 
