@@ -173,6 +173,7 @@ export const en: Dictionary = {
       consentDetail:
         "Collected: name, phone, attendance\nPurpose: confirming and guiding wedding guests\nRetention: deleted within one month after the wedding",
       submit: "Send RSVP",
+      error: "Something went wrong. Please try again shortly.",
     },
     done: {
       title: "Thank you",
@@ -211,15 +212,15 @@ export const en: Dictionary = {
       },
       note: "You'll need the password to delete your message.",
       submit: "Post",
-    },
       error: "Something went wrong. Please try again shortly.",
+    },
     remove: {
       title: "Delete this message?",
       body: "Enter the password you used when posting.",
       placeholder: "Password",
       wrong: "The password doesn't match.",
-      cancel: "Cancel",
       error: "Couldn't delete it. Please try again shortly.",
+      cancel: "Cancel",
       confirm: "Delete",
     },
   },
