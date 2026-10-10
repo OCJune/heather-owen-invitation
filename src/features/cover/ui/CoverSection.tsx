@@ -44,7 +44,7 @@ export async function CoverSection({ locale, dict }: CoverSectionProps) {
             src={photo.src}
             alt={photo.alt}
             fill
-            priority
+            preload
             sizes="334px"
             className="object-cover"
           />
