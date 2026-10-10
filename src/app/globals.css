@@ -7,4 +7,18 @@
   body {
     @apply bg-page font-sans text-primary antialiased;
   }
+
+  /* 모달이 열려 있는 동안 뒤 화면이 스크롤되지 않게 한다. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+
+/* 스크롤은 되지만 스크롤 막대는 보이지 않게 한다. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
