@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePhotos } from "@/features/gallery/model/usePhotos";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { cn } from "@/shared/lib/utils";
+import { PhotoSlot } from "@/shared/ui/PhotoSlot/PhotoSlot";
 import { AllPhotosModal } from "./AllPhotosModal";
 import { GalleryPhoto } from "./GalleryPhoto";
 import { PhotoViewer } from "./PhotoViewer";
@@ -60,6 +61,13 @@ export function GalleryBoard({ dict, closeLabel }: GalleryBoardProps) {
   return (
     <>
       <ul className="grid grid-cols-2 gap-2">
+        {/* 아직 공개된 사진이 없으면 자리 표시를 보여준다. */}
+        {previews.length === 0 &&
+          PREVIEW_SLOTS.map((slot, index) => (
+            <li key={index} className={cn("flex", slot.className)}>
+              <PhotoSlot sizeHint={slot.sizeHint} className="flex-1" />
+            </li>
+          ))}
         {previews.map((photo, index) => {
           const slot = PREVIEW_SLOTS[index];
 
@@ -76,7 +84,6 @@ export function GalleryBoard({ dict, closeLabel }: GalleryBoardProps) {
               >
                 <GalleryPhoto
                   photo={photo}
-                  sizeHint={slot.sizeHint}
                   sizes={slot.sizes}
                   className="size-full"
                 />

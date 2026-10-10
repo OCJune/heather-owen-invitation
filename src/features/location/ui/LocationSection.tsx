@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { getMapHref } from "@/features/location/lib/mapLinks";
+import { getPhotoByPlacement } from "@/shared/api/photos";
 import { WEDDING } from "@/shared/config/wedding";
 import type { DirectionLine, Dictionary } from "@/shared/i18n/ko";
 import { cn } from "@/shared/lib/utils";
@@ -19,7 +21,9 @@ export interface LocationSectionProps {
 }
 
 /** 오시는 길: 주소, 지도, 지도 앱 링크, 교통편 안내 표 */
-export function LocationSection({ dict, common }: LocationSectionProps) {
+export async function LocationSection({ dict, common }: LocationSectionProps) {
+  const mapPhoto = await getPhotoByPlacement("map");
+
   return (
     <section className="flex flex-col px-gutter py-section-y">
       <SectionHeader
@@ -46,12 +50,22 @@ export function LocationSection({ dict, common }: LocationSectionProps) {
         />
       </div>
 
-      {/* 지도 API 연동 전까지는 자리 표시를 둔다. */}
+      {/* 지도 API 연동 전까지는 노션에 올린 지도 사진을 보여준다. */}
       <PhotoSlot
         label={dict.mapLabel}
         sizeHint="334 × 240"
         className="mt-6 h-60 w-full"
-      />
+      >
+        {mapPhoto && (
+          <Image
+            src={mapPhoto.src}
+            alt={mapPhoto.alt}
+            fill
+            sizes="334px"
+            className="object-cover"
+          />
+        )}
+      </PhotoSlot>
       <ul className="flex divide-x divide-default">
         {dict.mapLinks.map(({ id, label }) => (
           <li key={id} className="flex-1">

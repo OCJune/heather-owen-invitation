@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { getPhotoByPlacement } from "@/shared/api/photos";
 import { WEDDING } from "@/shared/config/wedding";
 import type { Dictionary } from "@/shared/i18n/ko";
 import { LOCALE_HREFS, type Locale } from "@/shared/types/locale";
@@ -10,7 +12,9 @@ export interface CoverSectionProps {
 }
 
 /** 커버: 두 사람의 이름, 메인 사진, 예식 일시와 장소, 언어 전환 */
-export function CoverSection({ locale, dict }: CoverSectionProps) {
+export async function CoverSection({ locale, dict }: CoverSectionProps) {
+  const photo = await getPhotoByPlacement("cover");
+
   return (
     <section className="flex flex-col px-gutter pt-5 pb-12">
       <div className="flex items-center justify-between">
@@ -34,7 +38,18 @@ export function CoverSection({ locale, dict }: CoverSectionProps) {
         shape="arch"
         sizeHint="334 × 430"
         className="mt-7 h-107.5 w-full"
-      />
+      >
+        {photo && (
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            priority
+            sizes="334px"
+            className="object-cover"
+          />
+        )}
+      </PhotoSlot>
 
       <div className="mt-6 flex items-center justify-between typo-numeral-date-line text-primary">
         <p className="whitespace-pre">{dict.date}</p>

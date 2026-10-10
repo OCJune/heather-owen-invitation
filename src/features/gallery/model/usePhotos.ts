@@ -3,7 +3,7 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 import { photosInfiniteQueryOptions } from "@/features/gallery/api/photoQueries";
-import type { Photo } from "@/features/gallery/api/photos";
+import type { Photo } from "@/shared/types/photo";
 
 export interface UsePhotosReturn {
   /** 지금까지 불러온 사진들 */

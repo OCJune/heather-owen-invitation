@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Photo } from "@/features/gallery/api/photos";
 import type { Dictionary } from "@/shared/i18n/ko";
+import type { Photo } from "@/shared/types/photo";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Modal } from "@/shared/ui/Modal/Modal";
 import { GalleryPhoto } from "./GalleryPhoto";
@@ -90,8 +90,6 @@ export function PhotoViewer({
           >
             <GalleryPhoto
               photo={photos[current]}
-              label={`PHOTO ${pad(current + 1)}`}
-              sizeHint="390 × 520"
               sizes="(max-width: 390px) 100vw, 390px"
               fit="contain"
               inverse
