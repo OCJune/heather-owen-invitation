@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     loader: "custom",
     loaderFile: "./src/shared/lib/imageLoader.ts",
   },
+  // 처음 배포할 때 노션 사진을 Cloudinary로 복사하느라 페이지 생성이 오래 걸릴 수 있다. (기본 60초)
+  staticPageGenerationTimeout: 300,
   // 한국어 청첩장은 주소에 언어를 붙이지 않고 `/`로 연다. (영어는 `/en`)
   rewrites() {
     return [{ source: "/", destination: "/ko" }];
