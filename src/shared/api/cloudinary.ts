@@ -37,7 +37,8 @@ export async function uploadRemoteImage(
   }
 
   const params = {
-    overwrite: "true",
+    // 같은 이름이 이미 있으면 다시 올리지 않고 있는 사진을 돌려준다. (재시도 · 동시 실행 때 중복 업로드 방지)
+    overwrite: "false",
     public_id: `${FOLDER}/${name}`,
     timestamp: String(Math.floor(Date.now() / 1000)),
   };
