@@ -2,7 +2,7 @@ import { getAccounts, type AccountSide } from "@/features/gift/api/accounts";
 import type { Dictionary } from "@/shared/i18n/ko";
 import type { Locale } from "@/shared/types/locale";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
-import { AccountGroup } from "./AccountGroup";
+import { AccountAccordion } from "./AccountAccordion";
 import { AccountRow } from "./AccountRow";
 
 const SIDES: AccountSide[] = ["groom", "bride"];
@@ -33,25 +33,22 @@ export async function GiftSection({ locale, dict, common }: GiftSectionProps) {
         {dict.intro}
       </p>
 
-      <div className="mt-7 border-t border-strong">
-        {groups.map((group, index) => (
-          <AccountGroup
-            key={group.side}
-            title={dict.groups[group.side]}
-            defaultOpen={index === 0}
-          >
-            {group.accounts.map(({ id, holder, account }) => (
-              <AccountRow
-                key={id}
-                holder={holder}
-                account={account}
-                copyLabel={common.copy}
-                copiedLabel={common.copied}
-              />
-            ))}
-          </AccountGroup>
-        ))}
-      </div>
+      <AccountAccordion
+        className="mt-7 border-t border-strong"
+        items={groups.map((group) => ({
+          key: group.side,
+          title: dict.groups[group.side],
+          content: group.accounts.map(({ id, holder, account }) => (
+            <AccountRow
+              key={id}
+              holder={holder}
+              account={account}
+              copyLabel={common.copy}
+              copiedLabel={common.copied}
+            />
+          )),
+        }))}
+      />
     </section>
   );
 }
