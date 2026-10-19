@@ -228,8 +228,12 @@ export const en: Dictionary = {
     heading: "With gratitude,",
     body: "Thank you for celebrating our beginning.\nWe will cherish each other\nas much as we have been cherished.",
     sign: "Love, Jongchan & Hyunji (Heather)",
-    shareKakao: "Share on KakaoTalk",
+    share: "Share",
     copyLink: "Copy link",
+    shareFallbackCopied:
+      "Sharing isn't available here, so the link was copied instead.",
+    shareFallbackFailed:
+      "Sharing and copying aren't available here. Please copy the link from the address bar.",
     footerDate: "2027. 02. 20",
   },
 };

@@ -43,8 +43,10 @@ export async function ClosingSection({
       <div className="mt-10">
         <ShareButtons
           title={shareTitle}
-          shareLabel={dict.shareKakao}
+          shareLabel={dict.share}
           copyLabel={dict.copyLink}
+          shareFallbackCopied={dict.shareFallbackCopied}
+          shareFallbackFailed={dict.shareFallbackFailed}
           copiedLabel={common.copied}
         />
       </div>

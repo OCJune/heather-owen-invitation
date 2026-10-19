@@ -228,8 +228,12 @@ export const ko = {
     heading: "With gratitude,",
     body: "저희의 시작을 함께 기뻐해 주시는\n모든 분들께 깊이 감사드립니다.\n받은 사랑만큼 서로를 아끼며 살겠습니다.",
     sign: "종찬 & 현지 드림",
-    shareKakao: "카카오톡 공유",
-    copyLink: "링크 복사",
+    share: "공유하기",
+    copyLink: "링크 복사하기",
+    shareFallbackCopied:
+      "이 환경에서는 공유하기를 쓸 수 없어 링크를 대신 복사했습니다.",
+    shareFallbackFailed:
+      "이 환경에서는 공유하기와 링크 복사를 쓸 수 없습니다. 주소창의 링크를 직접 복사해주세요.",
     footerDate: "2027. 02. 20",
   },
 };
