@@ -22,7 +22,7 @@ export function GuestbookDeleteDialog({
   onDeleted,
   onClose,
 }: GuestbookDeleteDialogProps) {
-  const { mutate: deleteEntry, isPending } = useDeleteGuestbookEntry();
+  const { mutate: deleteEntry, isPending, isError } = useDeleteGuestbookEntry();
   const [isWrong, setIsWrong] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,7 +61,7 @@ export function GuestbookDeleteDialog({
           onChange={() => setIsWrong(false)}
         />
         <p role="alert" className="typo-caption-sans text-primary empty:hidden">
-          {isWrong && dict.wrong}
+          {isError ? dict.error : isWrong && dict.wrong}
         </p>
       </div>
 

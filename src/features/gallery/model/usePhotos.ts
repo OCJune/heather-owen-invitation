@@ -3,7 +3,7 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 import { photosInfiniteQueryOptions } from "@/features/gallery/api/photoQueries";
-import type { Photo } from "@/features/gallery/api/photos";
+import type { Photo } from "@/shared/types/photo";
 
 export interface UsePhotosReturn {
   /** 지금까지 불러온 사진들 */
@@ -14,8 +14,11 @@ export interface UsePhotosReturn {
   hasMore: boolean;
   /** 다음 묶음을 불러오는 중인지 */
   isLoadingMore: boolean;
-  /** 다음 묶음을 불러온다. 불러오는 중이거나 더 없으면 아무 일도 하지 않는다. */
-  loadMore: () => Promise<void>;
+  /**
+   * 다음 묶음을 불러온다. 불러오는 중이거나 더 없으면 아무 일도 하지 않는다.
+   * 새로 불러왔으면 true, 그렇지 않으면(실패 포함) false를 돌려준다.
+   */
+  loadMore: () => Promise<boolean>;
 }
 
 /**
@@ -32,8 +35,9 @@ export function usePhotos(): UsePhotosReturn {
   );
 
   const loadMore = useCallback(async () => {
-    if (!hasNextPage || isFetchingNextPage) return;
-    await fetchNextPage();
+    if (!hasNextPage || isFetchingNextPage) return false;
+    const result = await fetchNextPage();
+    return !result.isError;
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return {

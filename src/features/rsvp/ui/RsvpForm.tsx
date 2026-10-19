@@ -22,6 +22,7 @@ export interface RsvpFormProps {
 export function RsvpForm({ dict, closeLabel, onDone, onClose }: RsvpFormProps) {
   const { form } = dict;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +30,7 @@ export function RsvpForm({ dict, closeLabel, onDone, onClose }: RsvpFormProps) {
     const data = new FormData(event.currentTarget);
 
     setIsSubmitting(true);
+    setIsError(false);
     try {
       await submitRsvp({
         side: data.get("side") as RsvpRequest["side"],
@@ -37,6 +39,8 @@ export function RsvpForm({ dict, closeLabel, onDone, onClose }: RsvpFormProps) {
         phone: String(data.get("phone")).trim(),
       });
       onDone();
+    } catch {
+      setIsError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -123,7 +127,10 @@ export function RsvpForm({ dict, closeLabel, onDone, onClose }: RsvpFormProps) {
         </div>
       </div>
 
-      <div className="shrink-0 px-7 pt-3 pb-6">
+      <div className="flex shrink-0 flex-col gap-3 px-7 pt-3 pb-6">
+        <p role="alert" className="typo-caption-sans text-primary empty:hidden">
+          {isError && form.error}
+        </p>
         <Button
           type="submit"
           showIcon

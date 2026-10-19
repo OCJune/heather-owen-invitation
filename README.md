@@ -11,6 +11,7 @@
 | 코어 · 빌드   | Next.js 16 (App Router), React 19, TypeScript 5 |
 | 스타일 · UI   | Tailwind CSS 4                                  |
 | 서버 상태     | TanStack Query 5                                |
+| 데이터 · 사진 | Notion API (`@notionhq/client`), Cloudinary     |
 | 코드 품질     | ESLint 9 (`eslint-config-next`), Prettier 3     |
 | 패키지 매니저 | pnpm                                            |
 
@@ -35,7 +36,21 @@ pnpm install
 
 ### 환경 변수
 
-아직 사용하는 환경 변수가 없습니다. 추가할 때는 프로젝트 루트의 `.env.local`에 작성하고(`.env*`는 Git에 커밋하지 않습니다), 이 섹션에 변수명과 용도를 함께 기록합니다.
+[.env.example](.env.example)을 복사해 프로젝트 루트에 `.env`를 만들고 값을 채웁니다. (`.env`는 Git에 커밋하지 않습니다) 모두 서버에서만 읽는 값이므로 `NEXT_PUBLIC_`을 붙이지 않습니다.
+
+| 변수                              | 용도                                                          |
+| --------------------------------- | ------------------------------------------------------------- |
+| `NOTION_TOKEN`                    | 노션 내부 연결(Internal connection)의 API 토큰                |
+| `NOTION_PHOTOS_DATA_SOURCE_ID`    | 사진 DB의 데이터 소스 ID                                      |
+| `NOTION_ACCOUNTS_DATA_SOURCE_ID`  | 계좌 DB의 데이터 소스 ID                                      |
+| `NOTION_GUESTBOOK_DATA_SOURCE_ID` | 방명록 DB의 데이터 소스 ID                                    |
+| `NOTION_RSVP_DATA_SOURCE_ID`      | 참석 의사 DB의 데이터 소스 ID                                 |
+| `NOTION_WEBHOOK_SECRET`           | 노션 웹훅을 등록할 때 받은 확인용 토큰 (배포 환경에서만 필요) |
+| `CLOUDINARY_CLOUD_NAME`           | Cloudinary 클라우드 이름                                      |
+| `CLOUDINARY_API_KEY`              | Cloudinary API 키                                             |
+| `CLOUDINARY_API_SECRET`           | Cloudinary API 시크릿                                         |
+
+노션 값이 비어 있어도 화면은 열립니다. 사진은 회색 자리 표시로 보이고, 계좌 · 방명록은 비어 있으며, 방명록 작성과 참석 의사 전달은 오류 문구가 나옵니다.
 
 ### 실행 및 빌드 스크립트
 
@@ -70,6 +85,7 @@ src/
 │   │   ├── layout.tsx    # 루트 레이아웃 (<html lang>, 글꼴, 메타데이터)
 │   │   ├── page.tsx      # 청첩장 본문: features의 섹션을 순서대로 조립
 │   │   └── test/page.tsx # 공용 UI 테스트 페이지 (개발 환경 전용)
+│   ├── api/notion/webhook/ # 노션 웹훅을 받아 캐시를 비우는 Route Handler
 │   ├── fonts.ts          # 글꼴 불러오기 (Cormorant Garamond, Noto Serif KR, Noto Sans KR)
 │   ├── providers.tsx     # 전역 Provider (TanStack Query)
 │   └── globals.css       # Tailwind 진입점 + styles/ 토큰 import
@@ -85,8 +101,9 @@ src/
 │   └── closing/          # 마무리 인사, 공유
 ├── shared/               # 공용 모듈 (도메인 비의존)
 │   ├── ui/               # 공용 UI 컴포넌트 (아래 표 참고)
+│   ├── api/              # 서버 전용 모듈 (노션, Cloudinary, 사진 가져오기)
 │   ├── hooks/            # 공용 훅 (useCopy)
-│   ├── lib/              # 공통 유틸리티 (cn, getQueryClient)
+│   ├── lib/              # 공통 유틸리티 (cn, getQueryClient, imageLoader)
 │   ├── i18n/             # 언어별 문구 사전 (ko.ts, en.ts, getDictionary)
 │   ├── config/           # 언어와 무관한 예식 정보 (날짜, 영문 이름 등)
 │   ├── assets/           # 공용 에셋 (icons, images)
@@ -103,15 +120,50 @@ public/                   # 정적 파일 (OG 이미지, 파비콘 등 URL로 �
 | `/en`                  | 영어 청첩장                                       |
 | `/ko/test`, `/en/test` | 공용 UI 테스트 페이지 (개발 환경 전용)            |
 
-### 예시 데이터 (노션 연동 전)
+### 노션 DB
 
-사진 · 방명록 · 참석 의사는 아직 서버에 연결되어 있지 않고, 각 feature의 `api/`에 있는 **예시 구현**으로 동작합니다. 연동할 때는 함수의 모양(인자 · 반환값)은 그대로 두고 안쪽만 바꿉니다.
+사진 · 계좌 · 방명록 · 참석 의사는 노션 DB에서 관리합니다. 노션의 "모바일 청첩장 관리" 페이지 아래에 DB 4개가 있고, 코드는 **속성 이름**으로 값을 읽으므로 노션에서 속성 이름을 바꾸면 코드도 함께 고쳐야 합니다.
 
-| 파일                                     | 지금 동작                                                                             |
-| ---------------------------------------- | ------------------------------------------------------------------------------------- |
-| `features/gallery/api/photos.ts`         | 사진 없는 자리 21개를 12개씩 나눠 돌려줌 (회색 자리 표시로 보임)                      |
-| `features/guestbook/api/guestbookApi.ts` | 처음에는 비어 있음. 작성 · 삭제한 내용은 브라우저 메모리에만 남고 새로고침하면 사라짐 |
-| `features/rsvp/api/rsvpApi.ts`           | 아무 데도 저장하지 않고 완료 화면만 보여줌                                            |
+| DB        | 속성                                                                       | 코드                                     |
+| --------- | -------------------------------------------------------------------------- | ---------------------------------------- |
+| 사진      | 설명(제목), 사진(파일), 위치, 순서, 공개, 호스팅 주소                      | `shared/api/photos.ts`                   |
+| 계좌      | 예금주(제목), 예금주 (영문), 구분, 은행, 은행 (영문), 계좌번호, 순서, 공개 | `features/gift/api/accounts.ts`          |
+| 방명록    | 이름(제목), 메시지, 비밀번호, 작성일                                       | `features/guestbook/api/guestbookApi.ts` |
+| 참석 의사 | 이름(제목), 연락처, 구분, 참석, 제출일                                     | `features/rsvp/api/rsvpApi.ts`           |
+
+#### 사진
+
+- **위치**로 사진이 놓일 자리를 고릅니다. `공개`를 체크하고 `순서`가 작은 사진부터 보입니다.
+
+| 위치   | 보이는 곳                    | 장수                        |
+| ------ | ---------------------------- | --------------------------- |
+| 커버   | 맨 위 아치 사진              | 순서가 가장 앞선 1장        |
+| 사진첩 | Gallery 미리보기 · 전체 보기 | 전부 (12장씩 이어서 불러옴) |
+| 지도   | 오시는 길의 지도 자리        | 순서가 가장 앞선 1장        |
+| 마무리 | 맨 아래 감사 인사 위 사진    | 순서가 가장 앞선 1장        |
+
+- 노션에 올린 파일의 주소는 1시간 뒤 만료됩니다. 그래서 사진을 읽을 때 아직 복사하지 않은 파일을 **Cloudinary로 복사**하고, 그 주소를 노션의 `호스팅 주소`에 적어 둡니다. 화면은 이 주소를 씁니다. (`호스팅 주소`는 직접 고치지 않습니다)
+- 노션에서 파일을 바꾸면 다음에 읽을 때 다시 복사합니다.
+- `next/image`는 `shared/lib/imageLoader.ts`를 거쳐 Cloudinary에서 화면 폭에 맞는 크기 · 형식으로 받아 옵니다.
+
+#### 방명록 · 참석 의사
+
+- 하객이 남기면 노션 DB에 행이 추가됩니다. 방명록 메시지는 노션에서 행을 지우면 청첩장에서도 사라집니다.
+- 방명록 비밀번호는 그대로 저장하지 않고 해시로 바꿔 저장합니다.
+
+#### 반영 시점 (캐시 · 웹훅)
+
+노션에서 읽은 내용은 서버에 캐시해 두고, 아래 경우에 다시 가져옵니다.
+
+- 청첩장에서 방명록을 작성 · 삭제했을 때 (바로)
+- 노션 웹훅을 받았을 때 (`/api/notion/webhook`, 노션이 변경을 모아 보내므로 1~2분 뒤)
+- 그 밖에는 사진 · 계좌 1시간, 방명록 5분마다
+
+웹훅은 배포한 뒤 한 번 등록합니다. (로컬 주소로는 등록할 수 없습니다)
+
+1. [노션 개발자 포털](https://app.notion.com/developers)에서 연결을 열고 **Webhooks → Create a subscription**을 누른 뒤 `https://배포주소/api/notion/webhook`을 넣습니다.
+2. 노션이 보낸 확인용 토큰이 서버 로그에 `[notion webhook] verification_token: ...`으로 찍힙니다. 이 값을 노션의 **Verify** 창에 붙여 넣습니다.
+3. 같은 값을 환경 변수 `NOTION_WEBHOOK_SECRET`에 넣고 다시 배포합니다. 이후 요청은 이 값으로 서명을 확인합니다.
 
 ### 레이어 규칙
 
@@ -256,7 +308,7 @@ PR은 [PR 템플릿](.github/pull_request_template.md)에 맞춰 작성합니다
 - Props는 `interface`로 선언하고 컴포넌트와 함께 export 합니다. 유니온 · 유틸리티 타입은 `type`을 사용합니다.
 - 타입만 가져올 때는 `import type`을 사용합니다.
 - **기본은 Server Component**입니다. 상태 · 이벤트 · 브라우저 API가 필요한 컴포넌트에만 파일 최상단에 `"use client"`를 선언하고, 그 범위를 가능한 한 작게 유지합니다.
-- 이미지는 `next/image`를 사용합니다. 글꼴은 `src/app/fonts.ts`에서만 불러옵니다. (영문은 `next/font`, 한글은 `@fontsource` 패키지)
+- 이미지는 `next/image`를 사용합니다. 노션 사진은 `shared/api/photos.ts`로 가져옵니다. 글꼴은 `src/app/fonts.ts`에서만 불러옵니다. (영문은 `next/font`, 한글은 `@fontsource` 패키지)
 - 컴포넌트 · 훅 · 함수의 의도가 코드만으로 드러나지 않을 때 JSDoc 주석(한국어)을 답니다.
 
 ```tsx
@@ -331,6 +383,12 @@ const { data, fetchNextPage } = useSuspenseInfiniteQuery(
   photosInfiniteQueryOptions(),
 );
 ```
+
+#### 서버 전용 코드
+
+- 노션 토큰 같은 비밀 값을 다루는 모듈은 `shared/api/`에 두고 파일 맨 위에 `import "server-only"`를 적어 브라우저 번들에 섞이지 않게 합니다.
+- 브라우저에서도 불러야 하는 feature의 `api/` 함수(사진 이어서 불러오기, 방명록 작성 · 삭제, 참석 의사 전달)는 파일 맨 위에 `"use server"`를 적은 **서버 함수**로 만듭니다. 누구나 부를 수 있는 함수이므로 받은 값을 함수 안에서 다시 확인합니다.
+- 노션에서 읽은 값은 `unstable_cache`에 태그(`CACHE_TAGS`)를 붙여 캐시하고, 값이 바뀌면 `revalidateTag`로 비웁니다.
 
 #### 문구 (KO / EN)
 

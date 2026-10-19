@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Photo } from "@/features/gallery/api/photos";
 import type { Dictionary } from "@/shared/i18n/ko";
+import type { Photo } from "@/shared/types/photo";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Modal } from "@/shared/ui/Modal/Modal";
 import { GalleryPhoto } from "./GalleryPhoto";
@@ -101,7 +101,6 @@ export function AllPhotosModal({
               >
                 <GalleryPhoto
                   photo={photo}
-                  label={String(index + 1).padStart(2, "0")}
                   sizes="120px"
                   className="aspect-square w-full"
                 />
