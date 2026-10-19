@@ -8,6 +8,7 @@ import { Badge } from "@/shared/ui/Badge/Badge";
 import { PhotoSlot } from "@/shared/ui/PhotoSlot/PhotoSlot";
 import { SectionHeader } from "@/shared/ui/SectionHeader/SectionHeader";
 import { CopyAddressButton } from "./CopyAddressButton";
+import { TmapLink } from "./TmapLink";
 
 const LINE_CLASS: Record<DirectionLine["type"], string> = {
   strong: "typo-label-strong leading-[1.65] text-primary",
@@ -66,15 +67,12 @@ export async function LocationSection({ dict, common }: LocationSectionProps) {
           />
         )}
       </PhotoSlot>
-      <ul className="flex divide-x divide-default">
-        {dict.mapLinks.map(({ id, label }) => (
-          <li key={id} className="flex-1">
-            <a
-              href={getMapHref(id, WEDDING.venue.mapQuery)}
-              target="_blank"
-              rel="noreferrer"
-              className="flex justify-center gap-1 py-3.25 whitespace-nowrap"
-            >
+      <ul className="flex">
+        {dict.mapLinks.map(({ id, label }) => {
+          const linkClassName =
+            "flex justify-center gap-1 py-3.25 whitespace-nowrap";
+          const content = (
+            <>
               <span className="typo-label-small text-primary">{label}</span>
               <span
                 aria-hidden="true"
@@ -82,9 +80,38 @@ export async function LocationSection({ dict, common }: LocationSectionProps) {
               >
                 ↗
               </span>
-            </a>
-          </li>
-        ))}
+            </>
+          );
+
+          return (
+            <li
+              key={id}
+              className={cn(
+                "flex-1 border-l border-default first:border-l-0",
+                // 티맵은 휴대폰 앱으로만 열리므로 마우스를 쓰는 화면(PC)에서는 숨긴다.
+                id === "tmap" && "pointer-fine:hidden",
+              )}
+            >
+              {id === "tmap" ? (
+                <TmapLink
+                  query={WEDDING.venue.mapQuery}
+                  className={linkClassName}
+                >
+                  {content}
+                </TmapLink>
+              ) : (
+                <a
+                  href={getMapHref(id, WEDDING.venue.mapQuery)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={linkClassName}
+                >
+                  {content}
+                </a>
+              )}
+            </li>
+          );
+        })}
       </ul>
 
       <dl className="mt-10 border-t border-strong">
