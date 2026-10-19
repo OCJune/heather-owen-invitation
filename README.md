@@ -204,7 +204,7 @@ Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm d
 | Summary Row                | `shared/ui/SummaryRow/SummaryRow.tsx`         |                                                      |
 | Guestbook Message          | `features/guestbook/ui/GuestbookMessage.tsx`  | 방명록에서만 쓰므로 feature에 둠                     |
 | Account Row                | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠                  |
-| Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 제목 줄을 눌러 여닫음 (+ / −)                        |
+| Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 처음엔 닫힘, 제목 줄을 눌러 묶음마다 따로 여닫음     |
 
 - 모달은 `shared/ui/Modal/Modal.tsx`를 씁니다. `variant`로 가운데 창(`center`) · 아래에서 올라오는 창(`sheet`) · 전체 화면(`full`)을 고릅니다.
 - 아이콘을 추가할 때는 Figma에서 내보낸 SVG를 `shared/assets/icons/`에 넣고 `Icon.tsx`의 `ICONS`에 등록합니다.

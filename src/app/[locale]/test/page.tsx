@@ -162,7 +162,7 @@ export default function TestPage() {
 
       <Block title="Account Group · Account Row (features/gift)">
         <div className="border-t border-strong">
-          <AccountGroup title="신랑측 계좌" defaultOpen>
+          <AccountGroup title="신랑측 계좌">
             <AccountRow holder="신랑 이종찬" account="국민 000000-00-000000" />
             <AccountRow holder="부 이규장" account="신한 000-000-000000" />
             <AccountRow holder="모 전경자" account="농협 000-0000-0000-00" />

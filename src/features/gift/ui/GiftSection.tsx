@@ -34,12 +34,8 @@ export async function GiftSection({ locale, dict, common }: GiftSectionProps) {
       </p>
 
       <div className="mt-7 border-t border-strong">
-        {groups.map((group, index) => (
-          <AccountGroup
-            key={group.side}
-            title={dict.groups[group.side]}
-            defaultOpen={index === 0}
-          >
+        {groups.map((group) => (
+          <AccountGroup key={group.side} title={dict.groups[group.side]}>
             {group.accounts.map(({ id, holder, account }) => (
               <AccountRow
                 key={id}
