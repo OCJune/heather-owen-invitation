@@ -36,7 +36,7 @@ pnpm install
 
 ### 환경 변수
 
-[.env.example](.env.example)을 복사해 프로젝트 루트에 `.env`를 만들고 값을 채웁니다. (`.env`는 Git에 커밋하지 않습니다) 모두 서버에서만 읽는 값이므로 `NEXT_PUBLIC_`을 붙이지 않습니다.
+[.env.example](.env.example)을 복사해 프로젝트 루트에 `.env`를 만들고 값을 채웁니다. (`.env`는 Git에 커밋하지 않습니다) `NEXT_PUBLIC_`으로 시작하는 값만 브라우저에 공개되고, 나머지는 서버에서만 읽습니다. `NEXT_PUBLIC_` 값은 빌드할 때 코드에 들어가므로 바꾼 뒤에는 다시 배포해야 합니다.
 
 | 변수                              | 용도                                                          |
 | --------------------------------- | ------------------------------------------------------------- |
@@ -49,6 +49,7 @@ pnpm install
 | `CLOUDINARY_CLOUD_NAME`           | Cloudinary 클라우드 이름                                      |
 | `CLOUDINARY_API_KEY`              | Cloudinary API 키                                             |
 | `CLOUDINARY_API_SECRET`           | Cloudinary API 시크릿                                         |
+| `NEXT_PUBLIC_BGM_URL`             | 배경음악 파일 주소. 비워 두면 음악 버튼이 보이지 않음         |
 
 노션 값이 비어 있어도 화면은 열립니다. 사진은 회색 자리 표시로 보이고, 계좌 · 방명록은 비어 있으며, 방명록 작성과 참석 의사 전달은 오류 문구가 나옵니다.
 
@@ -98,6 +99,7 @@ src/
 │   ├── rsvp/             # 참석 의사 전달 (안내 모달 → 폼 모달)
 │   ├── gift/             # 마음 전하실 곳 (계좌 안내)
 │   ├── guestbook/        # 방명록 (목록, 작성, 삭제)
+│   ├── background-music/ # 배경음악과 오른쪽 아래 재생 · 일시정지 버튼
 │   └── closing/          # 마무리 인사, 공유
 ├── shared/               # 공용 모듈 (도메인 비의존)
 │   ├── ui/               # 공용 UI 컴포넌트 (아래 표 참고)
@@ -206,6 +208,7 @@ Figma의 🧩 Components · 🔣 Icons 페이지와 1:1로 맞춥니다. `pnpm d
 | Account Row                | `features/gift/ui/AccountRow.tsx`             | 계좌 안내에서만 쓰므로 feature에 둠                  |
 | Account 펼치기 (계좌 묶음) | `features/gift/ui/AccountGroup.tsx`           | 처음엔 닫힘, 제목 줄을 눌러 묶음마다 따로 여닫음     |
 
+- 배경음악 버튼(Figma: Music Toggle)은 `features/background-music/ui/MusicToggle.tsx`입니다. 음원은 저장소가 공개되어 있어 저장소에 넣지 않고, `NEXT_PUBLIC_BGM_URL`의 주소에서 재생합니다.
 - 화면 아래에 잠깐 떠오르는 안내는 `shared/ui/Toast/Toast.tsx`를 씁니다. (Figma에 없는 요소로, 디자인 토큰만 맞춰 만듦)
 - 모달은 `shared/ui/Modal/Modal.tsx`를 씁니다. `variant`로 가운데 창(`center`) · 아래에서 올라오는 창(`sheet`) · 전체 화면(`full`)을 고릅니다.
 - 아이콘을 추가할 때는 Figma에서 내보낸 SVG를 `shared/assets/icons/`에 넣고 `Icon.tsx`의 `ICONS`에 등록합니다.
