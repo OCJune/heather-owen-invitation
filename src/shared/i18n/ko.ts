@@ -224,6 +224,9 @@ export const ko = {
       confirm: "삭제",
     },
   },
+  music: {
+    label: "배경음악",
+  },
   closing: {
     heading: "With gratitude,",
     body: "저희의 시작을 함께 기뻐해 주시는\n모든 분들께 깊이 감사드립니다.\n받은 사랑만큼 서로를 아끼며 살겠습니다.",

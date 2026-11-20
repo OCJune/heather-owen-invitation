@@ -9,7 +9,7 @@ export interface ToastProps {
 }
 
 /**
- * 화면 아래에 잠깐 떠오르는 안내.
+ * 화면 아래에 잠깐 떠오르는 안내. 오른쪽 아래의 배경음악 버튼을 가리지 않도록 그 위에 띄운다.
  * 나타날 때는 아래에서 올라오며 서서히 보이고, 사라질 때는 반대로 움직인다.
  * 언제 닫을지는 쓰는 쪽에서 `isOpen`으로 정한다.
  */
@@ -18,7 +18,7 @@ export function Toast({ isOpen, children, className }: ToastProps) {
     <div
       role="status"
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 mx-auto flex w-full max-w-invitation justify-center px-gutter"
+      className="pointer-events-none fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-50 mx-auto flex w-full max-w-invitation justify-center px-gutter"
     >
       <p
         className={cn(
