@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { MusicToggle } from "@/features/background-music/ui/MusicToggle";
 import { ClosingSection } from "@/features/closing/ui/ClosingSection";
 import { CoverSection } from "@/features/cover/ui/CoverSection";
 import { GallerySection } from "@/features/gallery/ui/GallerySection";
@@ -36,6 +37,7 @@ export default async function InvitationPage({
         common={dict.common}
         shareTitle={dict.meta.title}
       />
+      <MusicToggle label={dict.music.label} />
     </main>
   );
 }

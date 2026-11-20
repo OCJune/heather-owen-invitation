@@ -224,6 +224,9 @@ export const en: Dictionary = {
       confirm: "Delete",
     },
   },
+  music: {
+    label: "Background music",
+  },
   closing: {
     heading: "With gratitude,",
     body: "Thank you for celebrating our beginning.\nWe will cherish each other\nas much as we have been cherished.",
