@@ -1,12 +1,16 @@
 import arrowRight from "@/shared/assets/icons/arrow-right.svg";
 import check from "@/shared/assets/icons/check.svg";
 import close from "@/shared/assets/icons/close.svg";
+import pause from "@/shared/assets/icons/pause.svg";
+import play from "@/shared/assets/icons/play.svg";
 import { cn } from "@/shared/lib/utils";
 
 const ICONS = {
   "arrow-right": arrowRight,
   check,
   close,
+  pause,
+  play,
 } as const;
 
 export type IconName = keyof typeof ICONS;
